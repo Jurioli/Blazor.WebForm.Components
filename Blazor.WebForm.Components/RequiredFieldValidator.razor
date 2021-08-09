@@ -1,0 +1,20 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits BaseValidatorControlComponent<System.Web.UI.WebControls.RequiredFieldValidator>
+@this.RenderWithInner(this.Control)
+@code {
+    [Parameter]
+    public string InitialValue
+    {
+        get
+        {
+            return this.Control.InitialValue;
+        }
+        set
+        {
+            this.Control.InitialValue = value;
+        }
+    }
+}

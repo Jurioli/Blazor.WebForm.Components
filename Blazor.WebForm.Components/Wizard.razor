@@ -1,0 +1,552 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@*@using System.Collections;*@
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits WebControlComponent<System.Web.UI.WebControls.Wizard>
+@this.RenderWithCascading(this.Control, this.ChildContent, this.ChildLevel)
+@code {
+    private WizardNavigationEventHandler _finishButtonClick;
+    private WizardNavigationEventHandler _nextButtonClick;
+    private WizardNavigationEventHandler _sideBarButtonClick;
+    private WizardNavigationEventHandler _previousButtonClick;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public int ChildLevel { get; set; } = 2;
+
+    [Parameter]
+    public string StartNextButtonText
+    {
+        get
+        {
+            return this.Control.StartNextButtonText;
+        }
+        set
+        {
+            this.Control.StartNextButtonText = value;
+        }
+    }
+
+    [Parameter]
+    public string StartNextButtonImageUrl
+    {
+        get
+        {
+            return this.Control.StartNextButtonImageUrl;
+        }
+        set
+        {
+            this.Control.StartNextButtonImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public ButtonType FinishPreviousButtonType
+    {
+        get
+        {
+            return this.Control.FinishPreviousButtonType;
+        }
+        set
+        {
+            this.Control.FinishPreviousButtonType = value;
+        }
+    }
+
+    [Parameter]
+    public string FinishPreviousButtonText
+    {
+        get
+        {
+            return this.Control.FinishPreviousButtonText;
+        }
+        set
+        {
+            this.Control.FinishPreviousButtonText = value;
+        }
+    }
+
+    [Parameter]
+    public ButtonType StartNextButtonType
+    {
+        get
+        {
+            return this.Control.StartNextButtonType;
+        }
+        set
+        {
+            this.Control.StartNextButtonType = value;
+        }
+    }
+
+    [Parameter]
+    public string HeaderText
+    {
+        get
+        {
+            return this.Control.HeaderText;
+        }
+        set
+        {
+            this.Control.HeaderText = value;
+        }
+    }
+
+    [Parameter]
+    public string StepNextButtonImageUrl
+    {
+        get
+        {
+            return this.Control.StepNextButtonImageUrl;
+        }
+        set
+        {
+            this.Control.StepNextButtonImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public string StepNextButtonText
+    {
+        get
+        {
+            return this.Control.StepNextButtonText;
+        }
+        set
+        {
+            this.Control.StepNextButtonText = value;
+        }
+    }
+
+    [Parameter]
+    public ButtonType StepNextButtonType
+    {
+        get
+        {
+            return this.Control.StepNextButtonType;
+        }
+        set
+        {
+            this.Control.StepNextButtonType = value;
+        }
+    }
+
+    [Parameter]
+    public string StepPreviousButtonImageUrl
+    {
+        get
+        {
+            return this.Control.StepPreviousButtonImageUrl;
+        }
+        set
+        {
+            this.Control.StepPreviousButtonImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public string StepPreviousButtonText
+    {
+        get
+        {
+            return this.Control.StepPreviousButtonText;
+        }
+        set
+        {
+            this.Control.StepPreviousButtonText = value;
+        }
+    }
+
+    [Parameter]
+    public ButtonType StepPreviousButtonType
+    {
+        get
+        {
+            return this.Control.StepPreviousButtonType;
+        }
+        set
+        {
+            this.Control.StepPreviousButtonType = value;
+        }
+    }
+
+    [Parameter]
+    public string FinishPreviousButtonImageUrl
+    {
+        get
+        {
+            return this.Control.FinishPreviousButtonImageUrl;
+        }
+        set
+        {
+            this.Control.FinishPreviousButtonImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public string SkipLinkText
+    {
+        get
+        {
+            return this.Control.SkipLinkText;
+        }
+        set
+        {
+            this.Control.SkipLinkText = value;
+        }
+    }
+
+    [Parameter]
+    public string FinishDestinationPageUrl
+    {
+        get
+        {
+            return this.Control.FinishDestinationPageUrl;
+        }
+        set
+        {
+            this.Control.FinishDestinationPageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public int CellPadding
+    {
+        get
+        {
+            return this.Control.CellPadding;
+        }
+        set
+        {
+            this.Control.CellPadding = value;
+        }
+    }
+
+    [Parameter]
+    public string FinishCompleteButtonText
+    {
+        get
+        {
+            return this.Control.FinishCompleteButtonText;
+        }
+        set
+        {
+            this.Control.FinishCompleteButtonText = value;
+        }
+    }
+
+    //public WizardStepBase ActiveStep
+    //{
+    //    get
+    //    {
+    //        return this.Control.ActiveStep;
+    //    }
+    //}
+
+    [Parameter]
+    public int ActiveStepIndex
+    {
+        get
+        {
+            return this.Control.ActiveStepIndex;
+        }
+        set
+        {
+            if (!this.Initialized)
+            {
+                return;
+            }
+            this.Control.ActiveStepIndex = value;
+        }
+    }
+
+    [Parameter]
+    public string CancelButtonImageUrl
+    {
+        get
+        {
+            return this.Control.CancelButtonImageUrl;
+        }
+        set
+        {
+            this.Control.CancelButtonImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public ButtonType CancelButtonType
+    {
+        get
+        {
+            return this.Control.CancelButtonType;
+        }
+        set
+        {
+            this.Control.CancelButtonType = value;
+        }
+    }
+
+    [Parameter]
+    public string CancelDestinationPageUrl
+    {
+        get
+        {
+            return this.Control.CancelDestinationPageUrl;
+        }
+        set
+        {
+            this.Control.CancelDestinationPageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public string CancelButtonText
+    {
+        get
+        {
+            return this.Control.CancelButtonText;
+        }
+        set
+        {
+            this.Control.CancelButtonText = value;
+        }
+    }
+
+    [Parameter]
+    public int CellSpacing
+    {
+        get
+        {
+            return this.Control.CellSpacing;
+        }
+        set
+        {
+            this.Control.CellSpacing = value;
+        }
+    }
+
+    [Parameter]
+    public bool DisplayCancelButton
+    {
+        get
+        {
+            return this.Control.DisplayCancelButton;
+        }
+        set
+        {
+            this.Control.DisplayCancelButton = value;
+        }
+    }
+
+    [Parameter]
+    public bool DisplaySideBar
+    {
+        get
+        {
+            return this.Control.DisplaySideBar;
+        }
+        set
+        {
+            this.Control.DisplaySideBar = value;
+        }
+    }
+
+    [Parameter]
+    public string FinishCompleteButtonImageUrl
+    {
+        get
+        {
+            return this.Control.FinishCompleteButtonImageUrl;
+        }
+        set
+        {
+            this.Control.FinishCompleteButtonImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public ButtonType FinishCompleteButtonType
+    {
+        get
+        {
+            return this.Control.FinishCompleteButtonType;
+        }
+        set
+        {
+            this.Control.FinishCompleteButtonType = value;
+        }
+    }
+
+    [Parameter]
+    public WizardNavigationEventHandler OnFinishButtonClick
+    {
+        get
+        {
+            return _finishButtonClick;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.FinishButtonClick += InvokeFinishButtonClick;
+            }
+            else
+            {
+                this.Control.FinishButtonClick -= InvokeFinishButtonClick;
+            }
+            _finishButtonClick = value;
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnCancelButtonClick
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.CancelButtonClick += i, i => this.Control.CancelButtonClick -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnActiveStepChanged
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.ActiveStepChanged += i, i => this.Control.ActiveStepChanged -= i);
+        }
+    }
+
+    [Parameter]
+    public WizardNavigationEventHandler OnNextButtonClick
+    {
+        get
+        {
+            return _nextButtonClick;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.NextButtonClick += InvokeNextButtonClick;
+            }
+            else
+            {
+                this.Control.NextButtonClick -= InvokeNextButtonClick;
+            }
+            _nextButtonClick = value;
+        }
+    }
+
+    [Parameter]
+    public WizardNavigationEventHandler OnSideBarButtonClick
+    {
+        get
+        {
+            return _sideBarButtonClick;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.SideBarButtonClick += InvokeSideBarButtonClick;
+            }
+            else
+            {
+                this.Control.SideBarButtonClick -= InvokeSideBarButtonClick;
+            }
+            _sideBarButtonClick = value;
+        }
+    }
+
+    [Parameter]
+    public WizardNavigationEventHandler OnPreviousButtonClick
+    {
+        get
+        {
+            return _previousButtonClick;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.PreviousButtonClick += InvokePreviousButtonClick;
+            }
+            else
+            {
+                this.Control.PreviousButtonClick -= InvokePreviousButtonClick;
+            }
+            _previousButtonClick = value;
+        }
+    }
+
+    //public ICollection GetHistory()
+    //{
+    //    return this.Control.GetHistory();
+    //}
+
+    //public WizardStepType GetStepType(WizardStepBase wizardStep, int index)
+    //{
+    //    return this.Control.GetStepType(wizardStep, index);
+    //}
+
+    //public void MoveTo(WizardStepBase wizardStep)
+    //{
+    //    this.Control.MoveTo(wizardStep);
+    //}
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (this.HasPropertyBindEvent<int>(nameof(this.ActiveStepIndex)))
+        {
+            this.Control.ActiveStepChanged += this.BindActiveStepChanged;
+        }
+    }
+
+    private void BindActiveStepChanged(object sender, EventArgs e)
+    {
+        this.InvokePropertyBindEvent(nameof(this.ActiveStepIndex), this.ActiveStepIndex);
+    }
+
+    protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
+    {
+        if (parameters.TryGetValue(nameof(this.ActiveStepIndex), out object value) && value is int activeStepIndex)
+        {
+            if (this.ActiveStepIndex != activeStepIndex)
+            {
+                this.ActiveStepIndex = activeStepIndex;
+            }
+        }
+    }
+
+    private void InvokeFinishButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        _finishButtonClick.Invoke(sender, e);
+    }
+
+    private void InvokeNextButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        _nextButtonClick.Invoke(sender, e);
+    }
+
+    private void InvokeSideBarButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        _sideBarButtonClick.Invoke(sender, e);
+    }
+
+    private void InvokePreviousButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        _previousButtonClick.Invoke(sender, e);
+    }
+}

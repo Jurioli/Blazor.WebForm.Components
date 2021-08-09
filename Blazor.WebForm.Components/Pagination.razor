@@ -1,0 +1,33 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits UserControlComponent<Extensions.Web.UI.WebControls.Pagination>
+@this.Render(this.Control)
+@code {
+    [Parameter]
+    public string PagerControlID
+    {
+        get
+        {
+            return this.Control.PagerControlID;
+        }
+        set
+        {
+            this.Control.PagerControlID = value;
+        }
+    }
+
+    [Parameter]
+    public EventHandler<PaginationEventArgs> OnSelectedPageChanging
+    {
+        get
+        {
+            return this.GetEventProperty<PaginationEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<PaginationEventArgs>(value, i => this.Control.SelectedPageChanging += i, i => this.Control.SelectedPageChanging -= i);
+        }
+    }
+}

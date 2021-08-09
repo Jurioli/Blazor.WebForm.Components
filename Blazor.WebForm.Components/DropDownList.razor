@@ -1,0 +1,10 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits ListControlComponent<System.Web.UI.WebControls.DropDownList>
+@this.RenderWithCascading(this.Control, this.ChildContent)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

@@ -1,0 +1,78 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.IO;
+@using System.Web;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits WebControlComponent<System.Web.UI.WebControls.FileUpload>
+@this.Render(this.Control)
+@code {
+    [Parameter]
+    public bool AllowMultiple
+    {
+        get
+        {
+            return this.Control.AllowMultiple;
+        }
+        set
+        {
+            this.Control.AllowMultiple = value;
+        }
+    }
+
+    //public byte[] FileBytes
+    //{
+    //    get
+    //    {
+    //        return this.Control.FileBytes;
+    //    }
+    //}
+
+    //public Stream FileContent
+    //{
+    //    get
+    //    {
+    //        return this.Control.FileContent;
+    //    }
+    //}
+
+    //public string FileName
+    //{
+    //    get
+    //    {
+    //        return this.Control.FileName;
+    //    }
+    //}
+
+    //public bool HasFile
+    //{
+    //    get
+    //    {
+    //        return this.Control.HasFile;
+    //    }
+    //}
+
+    //public bool HasFiles
+    //{
+    //    get
+    //    {
+    //        return this.Control.HasFiles;
+    //    }
+    //}
+
+    //public HttpPostedFile PostedFile
+    //{
+    //    get
+    //    {
+    //        return this.Control.PostedFile;
+    //    }
+    //}
+
+    //public IList<HttpPostedFile> PostedFiles
+    //{
+    //    get
+    //    {
+    //        return this.Control.PostedFiles;
+    //    }
+    //}
+}

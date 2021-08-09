@@ -1,0 +1,455 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits ListViewDataBoundControlComponent<System.Web.UI.WebControls.ListView>
+@this.RenderWithCascading(this.Control, this.ChildContent, this.ChildLevel)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public int ChildLevel { get; set; } = 1;
+
+    [Parameter]
+    public int GroupItemCount
+    {
+        get
+        {
+            return this.Control.GroupItemCount;
+        }
+        set
+        {
+            this.Control.GroupItemCount = value;
+        }
+    }
+
+    [Parameter]
+    public string GroupPlaceholderID
+    {
+        get
+        {
+            return this.Control.GroupPlaceholderID;
+        }
+        set
+        {
+            this.Control.GroupPlaceholderID = value;
+        }
+    }
+
+    [Parameter]
+    public bool EnablePersistedSelection
+    {
+        get
+        {
+            return this.Control.EnablePersistedSelection;
+        }
+        set
+        {
+            this.Control.EnablePersistedSelection = value;
+        }
+    }
+
+    [Parameter]
+    public bool EnableModelValidation
+    {
+        get
+        {
+            return this.Control.EnableModelValidation;
+        }
+        set
+        {
+            this.Control.EnableModelValidation = value;
+        }
+    }
+
+    [Parameter]
+    public string DataKeyNames
+    {
+        get
+        {
+            return this.ConvertToString<StringArrayConverter, string[]>(this.Control.DataKeyNames);
+        }
+        set
+        {
+            this.Control.DataKeyNames = this.ConvertFromString<StringArrayConverter, string[]>(value);
+        }
+    }
+
+    [Parameter]
+    public bool ConvertEmptyStringToNull
+    {
+        get
+        {
+            return this.Control.ConvertEmptyStringToNull;
+        }
+        set
+        {
+            this.Control.ConvertEmptyStringToNull = value;
+        }
+    }
+
+    [Parameter]
+    public int EditIndex
+    {
+        get
+        {
+            return this.Control.EditIndex;
+        }
+        set
+        {
+            if (!this.Initialized)
+            {
+                return;
+            }
+            this.Control.EditIndex = value;
+        }
+    }
+
+    //[Parameter]
+    //public string InsertMethod
+    //{
+    //    get
+    //    {
+    //        return this.Control.InsertMethod;
+    //    }
+    //    set
+    //    {
+    //        this.Control.InsertMethod = value;
+    //    }
+    //}
+
+    //[Parameter]
+    //public string UpdateMethod
+    //{
+    //    get
+    //    {
+    //        return this.Control.UpdateMethod;
+    //    }
+    //    set
+    //    {
+    //        this.Control.UpdateMethod = value;
+    //    }
+    //}
+
+    //[Parameter]
+    //public string DeleteMethod
+    //{
+    //    get
+    //    {
+    //        return this.Control.DeleteMethod;
+    //    }
+    //    set
+    //    {
+    //        this.Control.DeleteMethod = value;
+    //    }
+    //}
+
+    [Parameter]
+    public int SelectedIndex
+    {
+        get
+        {
+            return this.Control.SelectedIndex;
+        }
+        set
+        {
+            if (!this.Initialized)
+            {
+                return;
+            }
+            this.Control.SelectedIndex = value;
+        }
+    }
+
+    [Parameter]
+    public string ClientIDRowSuffix
+    {
+        get
+        {
+            return this.ConvertToString<StringArrayConverter, string[]>(this.Control.ClientIDRowSuffix);
+        }
+        set
+        {
+            this.Control.ClientIDRowSuffix = this.ConvertFromString<StringArrayConverter, string[]>(value);
+        }
+    }
+
+    [Parameter]
+    public string ItemPlaceholderID
+    {
+        get
+        {
+            return this.Control.ItemPlaceholderID;
+        }
+        set
+        {
+            this.Control.ItemPlaceholderID = value;
+        }
+    }
+
+    [Parameter]
+    public InsertItemPosition InsertItemPosition
+    {
+        get
+        {
+            return this.Control.InsertItemPosition;
+        }
+        set
+        {
+            this.Control.InsertItemPosition = value;
+        }
+    }
+
+    protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
+    {
+        if (parameters.TryGetValue(nameof(this.EditIndex), out object value1) && value1 is int editIndex)
+        {
+            if (this.EditIndex != editIndex)
+            {
+                this.EditIndex = editIndex;
+            }
+        }
+        if (parameters.TryGetValue(nameof(this.SelectedIndex), out object value2) && value2 is int selectedIndex)
+        {
+            if (this.SelectedIndex != selectedIndex)
+            {
+                this.SelectedIndex = selectedIndex;
+            }
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewSortEventArgs> OnSorting
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewSortEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewSortEventArgs>(value, i => this.Control.Sorting += i, i => this.Control.Sorting -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewDeletedEventArgs> OnItemDeleted
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewDeletedEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewDeletedEventArgs>(value, i => this.Control.ItemDeleted += i, i => this.Control.ItemDeleted -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewUpdatedEventArgs> OnItemUpdated
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewUpdatedEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewUpdatedEventArgs>(value, i => this.Control.ItemUpdated += i, i => this.Control.ItemUpdated -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewCancelEventArgs> OnItemCanceling
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewCancelEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewCancelEventArgs>(value, i => this.Control.ItemCanceling += i, i => this.Control.ItemCanceling -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewCommandEventArgs> OnItemCommand
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewCommandEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewCommandEventArgs>(value, i => this.Control.ItemCommand += i, i => this.Control.ItemCommand -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewItemEventArgs> OnItemCreated
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewItemEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewItemEventArgs>(value, i => this.Control.ItemCreated += i, i => this.Control.ItemCreated -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewItemEventArgs> OnItemDataBound
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewItemEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewItemEventArgs>(value, i => this.Control.ItemDataBound += i, i => this.Control.ItemDataBound -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewDeleteEventArgs> OnItemDeleting
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewDeleteEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewDeleteEventArgs>(value, i => this.Control.ItemDeleting += i, i => this.Control.ItemDeleting -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnSorted
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.Sorted += i, i => this.Control.Sorted -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewInsertedEventArgs> OnItemInserted
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewInsertedEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewInsertedEventArgs>(value, i => this.Control.ItemInserted += i, i => this.Control.ItemInserted -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewInsertEventArgs> OnItemInserting
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewInsertEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewInsertEventArgs>(value, i => this.Control.ItemInserting += i, i => this.Control.ItemInserting -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewUpdateEventArgs> OnItemUpdating
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewUpdateEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewUpdateEventArgs>(value, i => this.Control.ItemUpdating += i, i => this.Control.ItemUpdating -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnLayoutCreated
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.LayoutCreated += i, i => this.Control.LayoutCreated -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnPagePropertiesChanged
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.PagePropertiesChanged += i, i => this.Control.PagePropertiesChanged -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<PagePropertiesChangingEventArgs> OnPagePropertiesChanging
+    {
+        get
+        {
+            return this.GetEventProperty<PagePropertiesChangingEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<PagePropertiesChangingEventArgs>(value, i => this.Control.PagePropertiesChanging += i, i => this.Control.PagePropertiesChanging -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewEditEventArgs> OnItemEditing
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewEditEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewEditEventArgs>(value, i => this.Control.ItemEditing += i, i => this.Control.ItemEditing -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler<ListViewSelectEventArgs> OnSelectedIndexChanging
+    {
+        get
+        {
+            return this.GetEventProperty<ListViewSelectEventArgs>();
+        }
+        set
+        {
+            this.SetEventProperty<ListViewSelectEventArgs>(value, i => this.Control.SelectedIndexChanging += i, i => this.Control.SelectedIndexChanging -= i);
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnSelectedIndexChanged
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.SelectedIndexChanged += i, i => this.Control.SelectedIndexChanged -= i);
+        }
+    }
+}

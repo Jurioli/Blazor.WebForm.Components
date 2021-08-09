@@ -1,0 +1,101 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits ListControlComponent<System.Web.UI.WebControls.RadioButtonList>
+@this.RenderWithCascading(this.Control, this.ChildContent)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public TextAlign TextAlign
+    {
+        get
+        {
+            return this.Control.TextAlign;
+        }
+        set
+        {
+            this.Control.TextAlign = value;
+        }
+    }
+
+    [Parameter]
+    public RepeatLayout RepeatLayout
+    {
+        get
+        {
+            return this.Control.RepeatLayout;
+        }
+        set
+        {
+            this.Control.RepeatLayout = value;
+        }
+    }
+
+    [Parameter]
+    public RepeatDirection RepeatDirection
+    {
+        get
+        {
+            return this.Control.RepeatDirection;
+        }
+        set
+        {
+            this.Control.RepeatDirection = value;
+        }
+    }
+
+    [Parameter]
+    public int RepeatColumns
+    {
+        get
+        {
+            return this.Control.RepeatColumns;
+        }
+        set
+        {
+            this.Control.RepeatColumns = value;
+        }
+    }
+
+    [Parameter]
+    public bool RenderWhenDataEmpty
+    {
+        get
+        {
+            return this.Control.RenderWhenDataEmpty;
+        }
+        set
+        {
+            this.Control.RenderWhenDataEmpty = value;
+        }
+    }
+
+    [Parameter]
+    public int CellSpacing
+    {
+        get
+        {
+            return this.Control.CellSpacing;
+        }
+        set
+        {
+            this.Control.CellSpacing = value;
+        }
+    }
+
+    [Parameter]
+    public int CellPadding
+    {
+        get
+        {
+            return this.Control.CellPadding;
+        }
+        set
+        {
+            this.Control.CellPadding = value;
+        }
+    }
+}
