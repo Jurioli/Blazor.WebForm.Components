@@ -1,0 +1,88 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits UserControlComponent<Extensions.Web.UI.WebControls.PluralHolder>
+@this.RenderWithCascading(this.Control, this.ChildContent, this.ChildLevel)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public int ChildLevel { get; set; } = 2;
+
+    [Parameter]
+    public int LoadCount
+    {
+        get
+        {
+            return this.Control.LoadCount;
+        }
+        set
+        {
+            if (!this.Initialized)
+            {
+                return;
+            }
+            this.Control.LoadCount = value;
+        }
+    }
+
+    [Parameter]
+    public string PlaceHolderID
+    {
+        get
+        {
+            return this.Control.PlaceHolderID;
+        }
+        set
+        {
+            this.Control.PlaceHolderID = value;
+        }
+    }
+
+    [Parameter]
+    public bool AppendDataBoundItems
+    {
+        get
+        {
+            return this.Control.AppendDataBoundItems;
+        }
+        set
+        {
+            this.Control.AppendDataBoundItems = value;
+        }
+    }
+
+    [Parameter]
+    public object DataItem { get; set; }
+
+    protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
+    {
+        if (parameters.TryGetValue(nameof(this.LoadCount), out object value1) && value1 is int loadCount)
+        {
+            if (this.LoadCount != loadCount)
+            {
+                this.LoadCount = loadCount;
+            }
+        }
+        if (parameters.ContainsKey(nameof(this.DataItem)))
+        {
+            this.Page.LoadComplete += this.Page_LoadComplete;
+        }
+    }
+
+    private void Page_LoadComplete(object sender, EventArgs e)
+    {
+        if (this.DataItem != null)
+        {
+            foreach (Extensions.Web.UI.WebControls.PluralHolder.PluralItem item in this.Control.Items)
+            {
+                if (item.DataItem == null || item.DataItem == item.DataItem)
+                {
+                    item.DataItem = this.DataItem;
+                }
+            }
+        }
+    }
+}

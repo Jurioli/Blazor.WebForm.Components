@@ -1,0 +1,113 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits WebControlComponent<System.Web.UI.WebControls.Panel>
+@this.Render(this.Control)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string BackImageUrl
+    {
+        get
+        {
+            return this.Control.BackImageUrl;
+        }
+        set
+        {
+            this.Control.BackImageUrl = value;
+        }
+    }
+
+    [Parameter]
+    public string DefaultButton
+    {
+        get
+        {
+            return this.Control.DefaultButton;
+        }
+        set
+        {
+            this.Control.DefaultButton = value;
+        }
+    }
+
+    [Parameter]
+    public ContentDirection Direction
+    {
+        get
+        {
+            return this.Control.Direction;
+        }
+        set
+        {
+            this.Control.Direction = value;
+        }
+    }
+
+    [Parameter]
+    public string GroupingText
+    {
+        get
+        {
+            return this.Control.GroupingText;
+        }
+        set
+        {
+            this.Control.GroupingText = value;
+        }
+    }
+
+    [Parameter]
+    public HorizontalAlign HorizontalAlign
+    {
+        get
+        {
+            return this.Control.HorizontalAlign;
+        }
+        set
+        {
+            this.Control.HorizontalAlign = value;
+        }
+    }
+
+    [Parameter]
+    public ScrollBars ScrollBars
+    {
+        get
+        {
+            return this.Control.ScrollBars;
+        }
+        set
+        {
+            this.Control.ScrollBars = value;
+        }
+    }
+
+    [Parameter]
+    public bool Wrap
+    {
+        get
+        {
+            return this.Control.Wrap;
+        }
+        set
+        {
+            this.Control.Wrap = value;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        if (this.ChildContent != null)
+        {
+            RenderFragmentControl contentControl = new RenderFragmentControl();
+            contentControl.Content = this.ChildContent;
+            contentControl.Container = this.Control;
+            this.Controls.Add(contentControl);
+        }
+        base.OnInitialized();
+    }
+}

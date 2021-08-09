@@ -1,0 +1,33 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits ControlComponentBase<System.Web.UI.WebControls.Localize>
+@this.Render(this.Control)
+@code {
+    [Parameter]
+    public LiteralMode Mode
+    {
+        get
+        {
+            return this.Control.Mode;
+        }
+        set
+        {
+            this.Control.Mode = value;
+        }
+    }
+
+    [Parameter]
+    public string Text
+    {
+        get
+        {
+            return this.Control.Text;
+        }
+        set
+        {
+            this.Control.Text = value;
+        }
+    }
+}

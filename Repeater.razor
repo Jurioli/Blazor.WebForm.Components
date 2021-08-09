@@ -1,0 +1,201 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits ControlComponentBase<System.Web.UI.WebControls.Repeater>
+@this.RenderWithCascading(this.Control, this.ChildContent, this.ChildLevel)
+@code {
+    private RepeaterItemEventHandler _itemDataBound;
+    private RepeaterCommandEventHandler _itemCommand;
+    private CallingDataMethodsEventHandler _callingDataMethods;
+    private CreatingModelDataSourceEventHandler _creatingModelDataSource;
+    private RepeaterItemEventHandler _itemCreated;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public int ChildLevel { get; set; } = 1;
+
+    [Parameter]
+    public string DataSourceID
+    {
+        get
+        {
+            return this.Control.DataSourceID;
+        }
+        set
+        {
+            this.Control.DataSourceID = value;
+        }
+    }
+
+    [Parameter]
+    public string DataMember
+    {
+        get
+        {
+            return this.Control.DataMember;
+        }
+        set
+        {
+            this.Control.DataMember = value;
+        }
+    }
+
+    //[Parameter]
+    //public string ItemType
+    //{
+    //    get
+    //    {
+    //        return this.Control.ItemType;
+    //    }
+    //    set
+    //    {
+    //        this.Control.ItemType = value;
+    //    }
+    //}
+
+    //[Parameter]
+    //public string SelectMethod
+    //{
+    //    get
+    //    {
+    //        return this.Control.SelectMethod;
+    //    }
+    //    set
+    //    {
+    //        this.Control.SelectMethod = value;
+    //    }
+    //}
+
+    [Parameter]
+    public RepeaterItemEventHandler OnItemDataBound
+    {
+        get
+        {
+            return _itemDataBound;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.ItemDataBound += InvokeItemDataBound;
+            }
+            else
+            {
+                this.Control.ItemDataBound -= InvokeItemDataBound;
+            }
+            _itemDataBound = value;
+        }
+    }
+
+    [Parameter]
+    public RepeaterCommandEventHandler OnItemCommand
+    {
+        get
+        {
+            return _itemCommand;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.ItemCommand += InvokeItemCommand;
+            }
+            else
+            {
+                this.Control.ItemCommand -= InvokeItemCommand;
+            }
+            _itemCommand = value;
+        }
+    }
+
+    [Parameter]
+    public CallingDataMethodsEventHandler OnCallingDataMethods
+    {
+        get
+        {
+            return _callingDataMethods;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.CallingDataMethods += InvokeCallingDataMethods;
+            }
+            else
+            {
+                this.Control.CallingDataMethods -= InvokeCallingDataMethods;
+            }
+            _callingDataMethods = value;
+        }
+    }
+
+    [Parameter]
+    public CreatingModelDataSourceEventHandler OnCreatingModelDataSource
+    {
+        get
+        {
+            return _creatingModelDataSource;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.CreatingModelDataSource += InvokeCreatingModelDataSource;
+            }
+            else
+            {
+                this.Control.CreatingModelDataSource -= InvokeCreatingModelDataSource;
+            }
+            _creatingModelDataSource = value;
+        }
+    }
+
+    [Parameter]
+    public RepeaterItemEventHandler OnItemCreated
+    {
+        get
+        {
+            return _itemCreated;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.ItemCreated += InvokeItemCreated;
+            }
+            else
+            {
+                this.Control.ItemCreated -= InvokeItemCreated;
+            }
+            _itemCreated = value;
+        }
+    }
+
+    private void InvokeItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        _itemDataBound.Invoke(sender, e);
+    }
+
+    private void InvokeItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        _itemCommand.Invoke(source, e);
+    }
+
+    private void InvokeCallingDataMethods(object sender, CallingDataMethodsEventArgs e)
+    {
+        _callingDataMethods.Invoke(sender, e);
+    }
+
+    private void InvokeCreatingModelDataSource(object sender, CreatingModelDataSourceEventArgs e)
+    {
+        _creatingModelDataSource.Invoke(sender, e);
+    }
+
+    private void InvokeItemCreated(object sender, RepeaterItemEventArgs e)
+    {
+        _itemCreated.Invoke(sender, e);
+    }
+}

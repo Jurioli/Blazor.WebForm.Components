@@ -1,0 +1,33 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits BaseValidatorControlComponent<System.Web.UI.WebControls.RegularExpressionValidator>
+@this.RenderWithInner(this.Control)
+@code {
+    [Parameter]
+    public string ValidationExpression
+    {
+        get
+        {
+            return this.Control.ValidationExpression;
+        }
+        set
+        {
+            this.Control.ValidationExpression = value;
+        }
+    }
+
+    [Parameter]
+    public int? MatchTimeout
+    {
+        get
+        {
+            return this.Control.MatchTimeout;
+        }
+        set
+        {
+            this.Control.MatchTimeout = value;
+        }
+    }
+}
