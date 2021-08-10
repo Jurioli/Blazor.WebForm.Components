@@ -1,0 +1,205 @@
+﻿@using Blazor.WebForm.UI;
+@using Blazor.WebForm.UI.ControlComponents;
+@using System.Drawing;
+@using System.Web.UI;
+@using System.Web.UI.WebControls;
+@inherits UserControlComponent<Extensions.Web.UI.WebControls.ContainerButton>
+@this.Render(this.Control)
+@code {
+    private CommandEventHandler _command;
+
+    [Parameter]
+    public bool CausesValidation
+    {
+        get
+        {
+            return this.Control.CausesValidation;
+        }
+        set
+        {
+            this.Control.CausesValidation = value;
+        }
+    }
+
+    [Parameter]
+    public string OnClientClick
+    {
+        get
+        {
+            return this.Control.OnClientClick;
+        }
+        set
+        {
+            this.Control.OnClientClick = value;
+        }
+    }
+
+    [Parameter]
+    public string Style
+    {
+        get
+        {
+            return this.Control.Style.Value;
+        }
+        set
+        {
+            this.Control.Style.Value = value;
+        }
+    }
+
+    [Parameter]
+    public string FlashColor
+    {
+        get
+        {
+            return this.ConvertToString(this.Control.FlashColor);
+        }
+        set
+        {
+            this.Control.FlashColor = this.ConvertFromString<Color>(value);
+        }
+    }
+
+    [Parameter]
+    public bool Enabled
+    {
+        get
+        {
+            return this.Control.Enabled;
+        }
+        set
+        {
+            this.Control.Enabled = value;
+        }
+    }
+
+    [Parameter]
+    public string ValidationGroup
+    {
+        get
+        {
+            return this.Control.ValidationGroup;
+        }
+        set
+        {
+            this.Control.ValidationGroup = value;
+        }
+    }
+
+    [Parameter]
+    public ContainerType Container
+    {
+        get
+        {
+            return this.Control.Container;
+        }
+        set
+        {
+            this.Control.Container = value;
+        }
+    }
+
+    [Parameter]
+    public string TagName
+    {
+        get
+        {
+            return this.Control.TagName;
+        }
+        set
+        {
+            this.Control.TagName = value;
+        }
+    }
+
+    [Parameter]
+    public string Text
+    {
+        get
+        {
+            return this.Control.Text;
+        }
+        set
+        {
+            this.Control.Text = value;
+        }
+    }
+
+    [Parameter]
+    public string CommandArgument
+    {
+        get
+        {
+            return this.Control.CommandArgument;
+        }
+        set
+        {
+            this.Control.CommandArgument = value;
+        }
+    }
+
+    [Parameter]
+    public string CommandName
+    {
+        get
+        {
+            return this.Control.CommandName;
+        }
+        set
+        {
+            this.Control.CommandName = value;
+        }
+    }
+
+    //[Parameter]
+    //public string PostBackUrl
+    //{
+    //    get
+    //    {
+    //        return this.Control.PostBackUrl;
+    //    }
+    //    set
+    //    {
+    //        this.Control.PostBackUrl = value;
+    //    }
+    //}
+
+    [Parameter]
+    public EventHandler OnClick
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.Click += i, i => this.Control.Click -= i);
+        }
+    }
+
+    [Parameter]
+    public CommandEventHandler OnCommand
+    {
+        get
+        {
+            return _command;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.Command += InvokeCommand;
+            }
+            else
+            {
+                this.Control.Command -= InvokeCommand;
+            }
+            _command = value;
+        }
+    }
+
+    private void InvokeCommand(object sender, CommandEventArgs e)
+    {
+        _command.Invoke(sender, e);
+    }
+}

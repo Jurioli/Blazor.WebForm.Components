@@ -69,7 +69,7 @@ namespace Blazor.WebForm.UI.ControlComponents
                 }
                 finally
                 {
-                    this.AutoPostBack = true;
+                    this.AutoPostBack = autoPostBack;
                 }
             }
         }
