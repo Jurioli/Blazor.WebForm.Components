@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.Components
         private class ControlComponentReflection<T> where T : Control, new()
         {
             public delegate void SendMessageExtension(ControlComponent<T> component, string command, params object[] arguments);
-            public static SendMessageExtension SendMessageExtensionMethod = new ComponentOperator().ConvertToExtensionMethod<ControlComponent<T>, SendMessageExtension>("SendMessage", new Type[] { typeof(string), typeof(object[]) }, BindingFlags.Instance | BindingFlags.NonPublic);
+            public static readonly SendMessageExtension SendMessageExtensionMethod = new ComponentOperator().ConvertToExtensionMethod<ControlComponent<T>, SendMessageExtension>("SendMessage", new Type[] { typeof(string), typeof(object[]) }, BindingFlags.Instance | BindingFlags.NonPublic);
         }
     }
 }
