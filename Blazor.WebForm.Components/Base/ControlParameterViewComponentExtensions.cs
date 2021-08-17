@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -124,24 +125,24 @@ namespace Blazor.WebForm.UI
 
         public static string ConvertToString<TValue>(this IParameterViewComponent component, TValue value)
         {
-            return TypeDescriptor.GetConverter(typeof(TValue)).ConvertToString(value);
+            return TypeDescriptor.GetConverter(typeof(TValue)).ConvertToString(null, CultureInfo.InvariantCulture, value);
         }
 
         public static TValue ConvertFromString<TValue>(this IParameterViewComponent component, string value)
         {
-            return (TValue)TypeDescriptor.GetConverter(typeof(TValue)).ConvertFromString(value);
+            return (TValue)TypeDescriptor.GetConverter(typeof(TValue)).ConvertFromString(null, CultureInfo.InvariantCulture, value);
         }
 
         public static string ConvertToString<TConverter, TValue>(this IParameterViewComponent component, TValue value)
             where TConverter : TypeConverter, new()
         {
-            return new TConverter().ConvertToString(value);
+            return new TConverter().ConvertToString(null, CultureInfo.InvariantCulture, value);
         }
 
         public static TValue ConvertFromString<TConverter, TValue>(this IParameterViewComponent component, string value)
             where TConverter : TypeConverter, new()
         {
-            return (TValue)new TConverter().ConvertFromString(value);
+            return (TValue)new TConverter().ConvertFromString(null, CultureInfo.InvariantCulture, value);
         }
 
         public static ITemplate GetTemplateProperty(this IParameterViewComponent component, RenderFragment value)

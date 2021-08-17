@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TypeConverter = System.ComponentModel.TypeConverter;
-using TypeDescriptor = System.ComponentModel.TypeDescriptor;
 
 namespace Blazor.WebForm.UI.PropertyComponents
 {
