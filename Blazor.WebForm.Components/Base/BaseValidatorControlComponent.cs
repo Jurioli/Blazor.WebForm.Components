@@ -100,9 +100,9 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
         }
 
-        protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters, ref bool hasInnerContent)
+        protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters)
         {
-            base.SetInnerPropertyWithInner(parameters, ref hasInnerContent);
+            base.SetInnerPropertyWithInner(parameters);
             if (!parameters.ContainsKey(nameof(this.ID)) && string.IsNullOrEmpty(this.ID))
             {
                 this.ID = Guid.NewGuid().ToString("N");

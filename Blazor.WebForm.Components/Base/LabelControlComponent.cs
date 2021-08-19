@@ -28,11 +28,10 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
         }
 
-        protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters, ref bool hasInnerContent)
+        protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters)
         {
             if (parameters.ContainsKey(nameof(this.ChildContent)) && this.ChildContent != null)
             {
-                hasInnerContent = true;
                 this.Text = RenderUtility.GetContentString(this.ChildContent);
             }
         }

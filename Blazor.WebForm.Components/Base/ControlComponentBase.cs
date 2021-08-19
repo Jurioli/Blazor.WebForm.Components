@@ -23,7 +23,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         private IReadOnlyDictionary<string, object> _parameters;
         private bool _renderedWithCascading;
         private bool _renderedWithInner;
-        private bool _hasRenderedChildContent;
+        private TemplateControl _templateControl;
 
         //new public virtual TControl Control
         //{
@@ -226,6 +226,18 @@ namespace Blazor.WebForm.UI.ControlComponents
 
         List<string> IControlParameterViewComponent.ReserveParameters { get; set; }
 
+        public TemplateControl TemplateControl
+        {
+            get
+            {
+                if (_templateControl == null)
+                {
+                    _templateControl = (this.Control as IVirtualNamingContainer).TemplateControl;
+                }
+                return _templateControl;
+            }
+        }
+
         //public void DataBind()
         //{
         //    this.Control.DataBind();
@@ -321,10 +333,6 @@ namespace Blazor.WebForm.UI.ControlComponents
             if (!_renderedWithCascading)
             {
                 _renderedWithCascading = true;
-                if (childContent != null && childLevel == 0)
-                {
-                    _hasRenderedChildContent = true;
-                }
                 return RenderUtility.RenderWithCascading(control, childContent, childLevel, this.RenderWithCascading);
             }
             else
@@ -333,7 +341,7 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
         }
 
-        protected virtual void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters, ref bool hasInnerContent)
+        protected virtual void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters)
         {
 
         }
@@ -343,12 +351,7 @@ namespace Blazor.WebForm.UI.ControlComponents
             if (!_renderedWithInner)
             {
                 _renderedWithInner = true;
-                bool hasInnerContent = false;
-                this.SetInnerPropertyWithInner(_parameters, ref hasInnerContent);
-                if (hasInnerContent)
-                {
-                    _hasRenderedChildContent = true;
-                }
+                this.SetInnerPropertyWithInner(_parameters);
             }
             return this.Render(control);
         }
@@ -356,26 +359,31 @@ namespace Blazor.WebForm.UI.ControlComponents
         protected override void OnUpdate(object sender, EventArgs e)
         {
             base.OnUpdate(sender, e);
-            this.SendMessage("RequestRefresh");
+            this.SendMessage("RequestRefresh", this.TemplateControl);
         }
 
         [MessageNotifyMethod]
-        protected void RequestRefresh()
+        protected void RequestRefresh(TemplateControl control)
         {
-            if (!_hasRenderedChildContent)
+            if (control != this.TemplateControl)
             {
-                this.StateHasChanged();
+                return;
             }
+            this.StateHasChanged();
         }
 
         protected virtual void OnSubmit(object sender, EventArgs e)
         {
-            this.SendMessage("RequestLoadPostData");
+            this.SendMessage("RequestLoadPostData", this.TemplateControl);
         }
 
         [MessageNotifyMethod]
-        protected void RequestLoadPostData()
+        protected void RequestLoadPostData(TemplateControl control)
         {
+            if (control != this.TemplateControl)
+            {
+                return;
+            }
             if (this.Control is IPostBackDataHandler)
             {
                 this.LoadPostData(false);

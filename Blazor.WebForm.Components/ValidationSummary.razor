@@ -109,7 +109,7 @@
         }
     }
 
-    protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters, ref bool hasInnerContent)
+    protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters)
     {
         if (!parameters.ContainsKey(nameof(this.ID)) && string.IsNullOrEmpty(this.ID))
         {

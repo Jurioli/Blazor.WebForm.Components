@@ -11,10 +11,11 @@ namespace Microsoft.AspNetCore.Components
 {
     public static class ControlComponentExtensions
     {
-        public static void RequestRefresh<T>(this ControlComponent<T> component) where T : Control, new()
+        public static void RequestRefresh<T>(this TemplateControlComponent<T> component) where T : TemplateControl, new()
         {
             component.LoadPostData();
-            ControlComponentReflection<T>.SendMessageExtensionMethod(component, "RequestRefresh");
+            ControlComponentReflection<T>.SendMessageExtensionMethod(component, "RequestRefresh"
+                , arguments: new object[] { component.Control });
         }
         private class ControlComponentReflection<T> where T : Control, new()
         {
