@@ -46,6 +46,9 @@ namespace Blazor.WebForm.UI.PropertyComponents
         public System.Web.UI.WebControls.BorderStyle BorderStyle { get; set; }
 
         [Parameter]
+        public string BorderWidth { get; set; }
+
+        [Parameter]
         public string BorderColor { get; set; }
 
         [Parameter]
@@ -93,6 +96,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
 
                 case nameof(this.Height):
                 case nameof(this.Width):
+                case nameof(this.BorderWidth):
                     return this.ConvertFromString<System.Web.UI.WebControls.Unit>(parameter);
 
                 case nameof(this.FontBold):
