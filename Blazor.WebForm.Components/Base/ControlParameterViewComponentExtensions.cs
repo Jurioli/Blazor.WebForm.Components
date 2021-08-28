@@ -169,6 +169,19 @@ namespace Blazor.WebForm.UI
             }
         }
 
+        public static ITemplate GetInsertTemplateProperty<TValue>(this IParameterViewComponent component, RenderFragment<TValue> value)
+            where TValue : new()
+        {
+            if (value != null)
+            {
+                return new RenderFragmentBindableTemplateBuilder<TValue>(value, ExtractValues, () => new TValue());
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private static IOrderedDictionary ExtractValues<TValue>(Control container, TValue context)
         {
             return new OrderedDictionary().Apply(() => context);
