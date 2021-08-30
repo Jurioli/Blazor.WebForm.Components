@@ -182,6 +182,19 @@ namespace Blazor.WebForm.UI
             }
         }
 
+        public static ITemplate GetEditTemplateProperty<TValue>(this IParameterViewComponent component, RenderFragment<TValue> value)
+            where TValue : class, new()
+        {
+            if (value != null)
+            {
+                return new RenderFragmentBindableTemplateBuilder<TValue>(value, ExtractValues, context => new TValue().Apply(() => context));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private static IOrderedDictionary ExtractValues<TValue>(Control container, TValue context)
         {
             return new OrderedDictionary().Apply(() => context);
