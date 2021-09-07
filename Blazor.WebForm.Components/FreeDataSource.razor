@@ -8,9 +8,12 @@
 @code {
     private OnExecuteSorted _executeSorted;
     private OnExecuteUpdated _executeUpdated;
+    private OnExecuteUpdatedAsync _executeUpdatedAsync;
     private OnExecuteSelected _executeSelected;
     private OnExecuteDeleted _executeDeleted;
+    private OnExecuteDeletedAsync _executeDeletedAsync;
     private OnExecuteInserted _executeInserted;
+    private OnExecuteInsertedAsync _executeInsertedAsync;
 
     [Parameter]
     public bool AutoSort
@@ -94,6 +97,27 @@
     }
 
     [Parameter]
+    public OnExecuteUpdatedAsync OnExecuteUpdatedAsync
+    {
+        get
+        {
+            return _executeUpdatedAsync;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.ExecuteUpdatedAsync += InvokeExecuteUpdatedAsync;
+            }
+            else
+            {
+                this.Control.ExecuteUpdatedAsync -= InvokeExecuteUpdatedAsync;
+            }
+            _executeUpdatedAsync = value;
+        }
+    }
+
+    [Parameter]
     public EventHandler OnDataSourceChanged
     {
         get
@@ -149,6 +173,27 @@
     }
 
     [Parameter]
+    public OnExecuteInsertedAsync OnExecuteInsertedAsync
+    {
+        get
+        {
+            return _executeInsertedAsync;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.ExecuteInsertedAsync += InvokeExecuteInsertedAsync;
+            }
+            else
+            {
+                this.Control.ExecuteInsertedAsync -= InvokeExecuteInsertedAsync;
+            }
+            _executeInsertedAsync = value;
+        }
+    }
+
+    [Parameter]
     public OnExecuteDeleted OnExecuteDeleted
     {
         get
@@ -169,6 +214,27 @@
         }
     }
 
+    [Parameter]
+    public OnExecuteDeletedAsync OnExecuteDeletedAsync
+    {
+        get
+        {
+            return _executeDeletedAsync;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.ExecuteDeletedAsync += InvokeExecuteDeletedAsync;
+            }
+            else
+            {
+                this.Control.ExecuteDeletedAsync -= InvokeExecuteDeletedAsync;
+            }
+            _executeDeletedAsync = value;
+        }
+    }
+
     private void InvokeExecuteSorted(object sender, ref IEnumerable enumerable, DataSourceSelectArguments arguments)
     {
         _executeSorted.Invoke(sender, ref enumerable, arguments);
@@ -177,6 +243,11 @@
     private void InvokeExecuteUpdated(object sender, IDictionary keys, IDictionary values, IDictionary oldValues)
     {
         _executeUpdated.Invoke(sender, keys, values, oldValues);
+    }
+
+    private Task InvokeExecuteUpdatedAsync(object sender, IDictionary keys, IDictionary values, IDictionary oldValues)
+    {
+        return _executeUpdatedAsync.Invoke(sender, keys, values, oldValues);
     }
 
     private IEnumerable InvokeExecuteSelected(object sender)
@@ -189,8 +260,18 @@
         _executeDeleted.Invoke(sender, keys, oldValues);
     }
 
+    private Task InvokeExecuteDeletedAsync(object sender, IDictionary keys, IDictionary oldValues)
+    {
+        return _executeDeletedAsync.Invoke(sender, keys, oldValues);
+    }
+
     private void InvokeExecuteInserted(object sender, IDictionary values)
     {
         _executeInserted.Invoke(sender, values);
+    }
+
+    private Task InvokeExecuteInsertedAsync(object sender, IDictionary values)
+    {
+        return _executeInsertedAsync.Invoke(sender, values);
     }
 }
