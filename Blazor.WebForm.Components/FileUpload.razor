@@ -20,6 +20,58 @@
         }
     }
 
+    [Parameter]
+    public bool AutoPostBack
+    {
+        get
+        {
+            return this.Control.AutoPostBack;
+        }
+        set
+        {
+            this.Control.AutoPostBack = value;
+        }
+    }
+
+    [Parameter]
+    public bool CausesValidation
+    {
+        get
+        {
+            return this.Control.CausesValidation;
+        }
+        set
+        {
+            this.Control.CausesValidation = value;
+        }
+    }
+
+    [Parameter]
+    public string ValidationGroup
+    {
+        get
+        {
+            return this.Control.ValidationGroup;
+        }
+        set
+        {
+            this.Control.ValidationGroup = value;
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnPostedFileChanged
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.PostedFileChanged += i, i => this.Control.PostedFileChanged -= i);
+        }
+    }
+
     //public byte[] FileBytes
     //{
     //    get
