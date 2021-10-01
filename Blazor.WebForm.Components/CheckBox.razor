@@ -74,6 +74,19 @@
     }
 
     [Parameter]
+    public LabelMode LabelMode
+    {
+        get
+        {
+            return this.Control.LabelMode;
+        }
+        set
+        {
+            this.Control.LabelMode = value;
+        }
+    }
+
+    [Parameter]
     public string ValidationGroup
     {
         get

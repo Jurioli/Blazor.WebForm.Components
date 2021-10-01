@@ -22,6 +22,19 @@
     }
 
     [Parameter]
+    public LabelMode LabelMode
+    {
+        get
+        {
+            return this.Control.LabelMode;
+        }
+        set
+        {
+            this.Control.LabelMode = value;
+        }
+    }
+
+    [Parameter]
     public RepeatLayout RepeatLayout
     {
         get
