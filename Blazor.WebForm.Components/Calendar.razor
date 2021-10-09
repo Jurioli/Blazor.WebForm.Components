@@ -103,6 +103,19 @@
     }
 
     [Parameter]
+    public bool AllowTitleSelecting
+    {
+        get
+        {
+            return this.Control.AllowTitleSelecting;
+        }
+        set
+        {
+            this.Control.AllowTitleSelecting = value;
+        }
+    }
+
+    [Parameter]
     public TitleFormat TitleFormat
     {
         get
