@@ -3,6 +3,8 @@
 
 Demo: <https://blazorwebformdemo.github.io/>
 
+[![NuGet version (Blazor.WebForm.Components)](https://img.shields.io/nuget/v/Blazor.WebForm.Components)](https://www.nuget.org/packages/Blazor.WebForm.Components/)
+
 <pre style="background-color: #eeeeee; border: 1px solid rgb(221, 221, 221); box-sizing: border-box; color: #333333; font-family: &quot;Source Code Pro&quot;, Consolas, Courier, monospace; font-size: 15px; line-height: 22px; margin-bottom: 22px; margin-top: 22px; max-width: 100%; overflow: auto; padding: 4.5px 11px;"><code class="language-cs hljs" style="background-attachment: initial; background-clip: initial; background-image: initial; background-origin: initial; background-position: initial; background-repeat: initial; background-size: initial; border-radius: 0px; border: none; display: block; font-family: &quot;Source Code Pro&quot;, Consolas, Courier, monospace; font-size: 1em; line-height: inherit; margin: 0px; overflow-x: auto; padding: 0px; text-size-adjust: none;">@using System.Web.UI
 @using System.Web.UI.WebControls
 @page "/fetchdata-gridview"
@@ -64,4 +66,3 @@ Demo: <https://blazorwebformdemo.github.io/>
 
 
 
-<a href="https://www.nuget.org/packages/Blazor.WebForm.Components/">https://www.nuget.org/packages/Blazor.WebForm.Components/</a>
