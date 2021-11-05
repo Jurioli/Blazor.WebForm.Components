@@ -1,0 +1,77 @@
+﻿@using Blazor.WebForm.UI
+@using Blazor.WebForm.UI.ControlComponents
+@using System.Web.UI
+@using System.Web.UI.WebControls
+@inherits ListControlComponent<System.Web.UI.WebControls.ComboBox>
+@this.RenderWithCascading(this.Control, this.ChildContent)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Text
+    {
+        get
+        {
+            return this.Control.Text;
+        }
+        set
+        {
+            this.Control.Text = value;
+        }
+    }
+
+    [Parameter]
+    public bool ReadOnly
+    {
+        get
+        {
+            return this.Control.ReadOnly;
+        }
+        set
+        {
+            this.Control.ReadOnly = value;
+        }
+    }
+
+    [Parameter]
+    public int MaxLength
+    {
+        get
+        {
+            return this.Control.MaxLength;
+        }
+        set
+        {
+            this.Control.MaxLength = value;
+        }
+    }
+
+    [Parameter]
+    public int Columns
+    {
+        get
+        {
+            return this.Control.Columns;
+        }
+        set
+        {
+            this.Control.Columns = value;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (this.HasPropertyBindEvent<string>(nameof(this.Text)))
+        {
+            this.Control.AutoPostBack = true;
+            this.Control.TextChanged += this.BindTextChanged;
+        }
+    }
+
+    private void BindTextChanged(object sender, EventArgs e)
+    {
+        this.InvokePropertyBindEvent(nameof(this.Text), this.Text);
+    }
+}
