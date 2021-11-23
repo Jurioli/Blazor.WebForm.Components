@@ -168,6 +168,10 @@
         {
             this.Control.AutoPostBack = true;
             this.Control.TextChanged += this.BindTextChanged;
+            if (this.HasEventProperty(nameof(this.OnTextChanged)))
+            {
+                this.SetBindEventProperty(nameof(this.OnTextChanged), this.BindTextChanged);
+            }
         }
     }
 

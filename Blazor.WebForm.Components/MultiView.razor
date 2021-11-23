@@ -57,6 +57,10 @@
         if (this.HasPropertyBindEvent<int>(nameof(this.ActiveViewIndex)))
         {
             this.Control.ActiveViewChanged += this.BindActiveViewChanged;
+            if (this.HasEventProperty(nameof(this.OnActiveViewChanged)))
+            {
+                this.SetBindEventProperty(nameof(this.OnActiveViewChanged), this.BindActiveViewChanged);
+            }
         }
     }
 

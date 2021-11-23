@@ -12,9 +12,14 @@ namespace Blazor.WebForm.UI
         private class EventProperty
         {
             public object Handler { get; set; }
+            public object BindHandler { get; set; }
 
             public void Invoke(object sender, EventArgs e)
             {
+                if (this.BindHandler is EventHandler bindHandler)
+                {
+                    bindHandler.Invoke(sender, e);
+                }
                 if (this.Handler is EventHandler handler)
                 {
                     handler.Invoke(sender, e);
@@ -23,6 +28,10 @@ namespace Blazor.WebForm.UI
 
             public void Invoke<TEventArgs>(object sender, TEventArgs e)
             {
+                if (this.BindHandler is EventHandler<TEventArgs> bindHandler)
+                {
+                    bindHandler.Invoke(sender, e);
+                }
                 if (this.Handler is EventHandler<TEventArgs> handler)
                 {
                     handler.Invoke(sender, e);
@@ -31,6 +40,11 @@ namespace Blazor.WebForm.UI
         }
 
         private readonly ConcurrentDictionary<string, EventProperty> _events = new ConcurrentDictionary<string, EventProperty>();
+
+        public bool HasEventProperty(string propertyName)
+        {
+            return _events.ContainsKey(propertyName);
+        }
 
         public EventHandler GetEventProperty(string propertyName)
         {
@@ -54,11 +68,7 @@ namespace Blazor.WebForm.UI
         {
             if (handler != null)
             {
-                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty);
-                if (eventProperty.Handler == null)
-                {
-                    add(eventProperty.Invoke);
-                }
+                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, add);
                 eventProperty.Handler = handler;
             }
             else
@@ -75,11 +85,7 @@ namespace Blazor.WebForm.UI
         {
             if (handler != null)
             {
-                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty);
-                if (eventProperty.Handler == null)
-                {
-                    add(eventProperty.Invoke);
-                }
+                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, add);
                 eventProperty.Handler = handler;
             }
             else
@@ -92,12 +98,42 @@ namespace Blazor.WebForm.UI
             }
         }
 
-        private EventProperty CreateEventProperty(string propertyName)
+        public void SetBindEventProperty(string propertyName, EventHandler bindHandler)
         {
-            return new EventProperty();
+            if (bindHandler != null && _events.TryGetValue(propertyName, out EventProperty eventProperty))
+            {
+                eventProperty.BindHandler = bindHandler;
+            }
         }
 
-        private EventProperty UpdateEventProperty(string propertyName, EventProperty eventProperty)
+        public void SetBindEventProperty<TEventArgs>(string propertyName, EventHandler<TEventArgs> bindHandler)
+        {
+            if (bindHandler != null && _events.TryGetValue(propertyName, out EventProperty eventProperty))
+            {
+                eventProperty.BindHandler = bindHandler;
+            }
+        }
+
+        private EventProperty CreateEventProperty(string propertyName, Action<EventHandler> add)
+        {
+            EventProperty eventProperty = new EventProperty();
+            add(eventProperty.Invoke);
+            return eventProperty;
+        }
+
+        private EventProperty UpdateEventProperty(string propertyName, EventProperty eventProperty, Action<EventHandler> add)
+        {
+            return eventProperty;
+        }
+
+        private EventProperty CreateEventProperty<TEventArgs>(string propertyName, Action<EventHandler<TEventArgs>> add)
+        {
+            EventProperty eventProperty = new EventProperty();
+            add(eventProperty.Invoke);
+            return eventProperty;
+        }
+
+        private EventProperty UpdateEventProperty<TEventArgs>(string propertyName, EventProperty eventProperty, Action<EventHandler<TEventArgs>> add)
         {
             return eventProperty;
         }

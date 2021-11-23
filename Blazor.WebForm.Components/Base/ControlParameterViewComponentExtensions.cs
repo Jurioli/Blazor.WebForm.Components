@@ -123,6 +123,16 @@ namespace Blazor.WebForm.UI
             component.Events.SetEventProperty(handler, add, remove, propertyName);
         }
 
+        public static void SetBindEventProperty(this IParameterViewComponent component, string propertyName, EventHandler bindHandler)
+        {
+            component.Events.SetBindEventProperty(propertyName, bindHandler);
+        }
+
+        public static void SetBindEventProperty<TEventArgs>(this IParameterViewComponent component, string propertyName, EventHandler<TEventArgs> bindHandler)
+        {
+            component.Events.SetBindEventProperty(propertyName, bindHandler);
+        }
+
         public static string ConvertToString<TValue>(this IParameterViewComponent component, TValue value)
         {
             return TypeDescriptor.GetConverter(typeof(TValue)).ConvertToString(null, CultureInfo.CurrentCulture, value);

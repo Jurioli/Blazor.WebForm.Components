@@ -355,6 +355,10 @@
         if (this.HasPropertyBindEvent<DateTime>(nameof(this.SelectedDate)))
         {
             this.Control.SelectionChanged += this.BindSelectionChanged;
+            if (this.HasEventProperty(nameof(this.OnSelectionChanged)))
+            {
+                this.SetBindEventProperty(nameof(this.OnSelectionChanged), this.BindSelectionChanged);
+            }
         }
     }
 

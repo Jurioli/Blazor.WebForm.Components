@@ -511,6 +511,10 @@
         if (this.HasPropertyBindEvent<int>(nameof(this.ActiveStepIndex)))
         {
             this.Control.ActiveStepChanged += this.BindActiveStepChanged;
+            if (this.HasEventProperty(nameof(this.OnActiveStepChanged)))
+            {
+                this.SetBindEventProperty(nameof(this.OnActiveStepChanged), this.BindActiveStepChanged);
+            }
         }
     }
 

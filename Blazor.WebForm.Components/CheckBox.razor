@@ -135,6 +135,10 @@
         {
             this.Control.AutoPostBack = true;
             this.Control.CheckedChanged += this.BindCheckedChanged;
+            if (this.HasEventProperty(nameof(this.OnCheckedChanged)))
+            {
+                this.SetBindEventProperty(nameof(this.OnCheckedChanged), this.BindCheckedChanged);
+            }
         }
     }
 

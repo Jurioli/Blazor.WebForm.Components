@@ -83,6 +83,10 @@ namespace Blazor.WebForm.UI.ControlComponents
             {
                 this.Control.AutoPostBack = true;
                 this.Control.SelectedIndexChanged += this.BindSelectedIndexChanged;
+                if (this.HasEventProperty(nameof(this.OnSelectedIndexChanged)))
+                {
+                    this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged);
+                }
             }
         }
 
