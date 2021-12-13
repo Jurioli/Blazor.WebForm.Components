@@ -11,10 +11,11 @@ using System.Web.UI.WebControls;
 
 namespace Blazor.WebForm.UI.ControlComponents
 {
-    public abstract class ControlComponentBase<TControl> : ControlComponent<TControl>, IControlParameterViewComponent
+    public abstract class ControlComponentBase<TControl> : ControlComponent<TControl>, IControlParameterViewComponent, IDisposable
         where TControl : Control, new()
     {
         private bool _initialized;
+        private bool _disposed;
 
         private IReadOnlyDictionary<string, object> _attributes;
         private EventHandlerDictionary _events;
@@ -317,6 +318,11 @@ namespace Blazor.WebForm.UI.ControlComponents
                     if (control != null)
                     {
                         this.Control = control;
+                        if (control.IsPostBack)
+                        {
+                            _renderedWithCascading = true;
+                            _renderedWithInner = true;
+                        }
                     }
                 }
                 _firstSet = false;
@@ -409,7 +415,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         [MessageNotifyMethod]
         protected void RequestRefresh(TemplateControl control)
         {
-            if (control != this.TemplateControl)
+            if (_disposed || control != this.TemplateControl)
             {
                 return;
             }
@@ -424,7 +430,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         [MessageNotifyMethod]
         protected void RequestLoadPostData(TemplateControl control)
         {
-            if (control != this.TemplateControl)
+            if (_disposed || control != this.TemplateControl)
             {
                 return;
             }
@@ -437,6 +443,19 @@ namespace Blazor.WebForm.UI.ControlComponents
         public static implicit operator TControl(ControlComponentBase<TControl> component)
         {
             return component.Control;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+            }
+        }
+
+        void IDisposable.Dispose()
+        {
+            this.Dispose(true);
         }
     }
 }
