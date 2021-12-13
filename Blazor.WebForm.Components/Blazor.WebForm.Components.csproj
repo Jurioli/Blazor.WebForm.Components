@@ -25,8 +25,4 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\System.Web\System.Web.csproj" />
-  </ItemGroup>
-
 </Project>
