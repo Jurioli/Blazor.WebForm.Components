@@ -320,6 +320,7 @@ namespace Blazor.WebForm.UI.ControlComponents
                         this.Control = control;
                         if (control.IsPostBack)
                         {
+                            this.FilterParameters(ref parameters);
                             _renderedWithCascading = true;
                             _renderedWithInner = true;
                         }
