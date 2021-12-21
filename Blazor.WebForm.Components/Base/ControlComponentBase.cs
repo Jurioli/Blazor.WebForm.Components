@@ -407,10 +407,13 @@ namespace Blazor.WebForm.UI.ControlComponents
             return this.Render(control);
         }
 
-        protected override void OnUpdate(object sender, EventArgs e)
+        protected override void OnUpdate(object sender, StateUpdateEventArgs e)
         {
             base.OnUpdate(sender, e);
-            this.SendMessage("RequestRefresh", this.TemplateControl);
+            if (e.PostBackRefresh)
+            {
+                this.SendMessage("RequestRefresh", this.TemplateControl);
+            }
         }
 
         [MessageNotifyMethod]
