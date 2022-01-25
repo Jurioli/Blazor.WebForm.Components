@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI;
@@ -336,32 +335,6 @@ namespace Blazor.WebForm.UI.ControlComponents
             return base.SetParametersAsync(parameters);
         }
 
-        private TControl CaptureReferenceControl(Expression<Func<TControl>> func)
-        {
-            if (func.Body is MemberExpression expression)
-            {
-                if (expression.Member is FieldInfo field)
-                {
-                    if (!field.IsStatic
-                        && expression.Expression is ConstantExpression constant
-                        && field.GetValue(constant.Value) == null)
-                    {
-                        field.SetValue(constant.Value, this.Control);
-                    }
-                }
-                else if (expression.Member is PropertyInfo property)
-                {
-                    if (property.CanRead && property.CanWrite
-                        && expression.Expression is ConstantExpression constant
-                        && property.GetValue(constant.Value) == null)
-                    {
-                        property.SetValue(constant.Value, this.Control);
-                    }
-                }
-            }
-            return func.Compile().Invoke();
-        }
-
         protected override void OnAfterRender(bool firstRender)
         {
             _parameters = null;
@@ -453,6 +426,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         {
             if (!_disposed)
             {
+                (this.Control as IHandleUnload).Unload();
                 _disposed = true;
             }
         }

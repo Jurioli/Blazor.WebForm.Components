@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,6 +43,9 @@ namespace Blazor.WebForm.UI.PropertyComponents
         //        return this.Control.Controls;
         //    }
         //}
+
+        [Parameter]
+        public Expression<Func<TControl>> _ref { get; set; }
 
         [Parameter]
         public string ID
@@ -199,6 +203,14 @@ namespace Blazor.WebForm.UI.PropertyComponents
         {
             if (_firstSet)
             {
+                if (parameters.TryGetValue(nameof(this._ref), out Expression<Func<TControl>> func) && func != null)
+                {
+                    TControl control = this.CaptureReferenceControl(func);
+                    if (control != null)
+                    {
+                        this._control = control;
+                    }
+                }
                 _firstSet = false;
             }
             else

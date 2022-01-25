@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +60,33 @@ namespace Blazor.WebForm.UI
                 }
             }
             return reserveParameters;
+        }
+
+        internal static TControl CaptureReferenceControl<TControl>(this IControlParameterViewComponent component, Expression<Func<TControl>> func)
+            where TControl : Control
+        {
+            if (func.Body is MemberExpression expression)
+            {
+                if (expression.Member is FieldInfo field)
+                {
+                    if (!field.IsStatic
+                        && expression.Expression is ConstantExpression constant
+                        && field.GetValue(constant.Value) == null)
+                    {
+                        field.SetValue(constant.Value, component.Control);
+                    }
+                }
+                else if (expression.Member is PropertyInfo property)
+                {
+                    if (property.CanRead && property.CanWrite
+                        && expression.Expression is ConstantExpression constant
+                        && property.GetValue(constant.Value) == null)
+                    {
+                        property.SetValue(constant.Value, component.Control);
+                    }
+                }
+            }
+            return func.Compile().Invoke();
         }
 
         private static bool HasPropertyBindEvent(IReadOnlyDictionary<string, object> attributes, string propertyName)
