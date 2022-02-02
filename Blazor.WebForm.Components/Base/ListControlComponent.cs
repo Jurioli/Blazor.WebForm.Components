@@ -12,6 +12,8 @@ namespace Blazor.WebForm.UI.ControlComponents
     public abstract class ListControlComponent<TControl> : DataBoundControlComponent<TControl>
         where TControl : ListControl, new()
     {
+        private bool _hasBindSelectedValue;
+
         [Parameter]
         public string ValidationGroup
         {
@@ -34,7 +36,14 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
             set
             {
-                this.Control.SelectedValue = value;
+                if (_hasBindSelectedValue)
+                {
+                    ((IBindingListControl)this.Control).SelectedValue = value;
+                }
+                else
+                {
+                    this.Control.SelectedValue = value;
+                }
             }
         }
 
@@ -192,8 +201,10 @@ namespace Blazor.WebForm.UI.ControlComponents
             base.OnInitialized();
             if (this.HasPropertyBindEvent<string>(nameof(this.SelectedValue)))
             {
+                _hasBindSelectedValue = true;
                 this.Control.AutoPostBack = true;
                 this.Control.SelectedIndexChanged += this.BindSelectedIndexChanged;
+                ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += this.BindSelectedIndexChanged;
                 if (this.HasEventProperty(nameof(this.OnSelectedIndexChanged)))
                 {
                     this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged);
