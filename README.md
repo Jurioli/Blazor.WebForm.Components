@@ -64,5 +64,68 @@ Demo: <https://blazorwebformdemo.github.io/>
     }
 }</code></pre>
 
-
-
+<table>
+    <tr>
+        <th align="left" colspan="5"><li>Standard Toolbox</li></th>
+    </tr>
+    <tr>
+        <td>BulletedList</td><td>DropDownList</td><td>ImageMap</td><td>MultiView</td><td>TextBox</td>
+    </tr>
+    <tr>
+        <td>Button</td><td>FileUpload</td><td>Label</td><td>Panel</td><td>Wizard</td>
+    </tr>
+    <tr>
+        <td>Calendar</td><td>HiddenField</td><td>LinkButton</td><td>PlaceHolder</td><td></td>
+    </tr>
+    <tr>
+        <td>CheckBox</td><td>HyperLink</td><td>ListBox</td><td>RadioButton</td><td></td>
+    </tr>
+    <tr>
+        <td>CheckBoxList</td><td>Image</td><td>ListBox</td><td>RadioButtonList</td><td></td>
+    </tr>
+    <tr>
+        <td>ComboBox</td><td>ImageButton</td><td>Localize</td><td>Table</td><td></td>
+    </tr>
+</table>
+<p></p>
+<table>
+    <tr>
+        <th align="left" colspan="2"><li>Data Toolbox</li></th>
+    </tr>
+    <tr>
+        <td>DataList</td><td>ListView</td>
+    </tr>
+    <tr>
+        <td>DataPager</td><td>Repeater</td>
+    </tr>
+    <tr>
+        <td>DetailsView</td><td></td>
+    </tr>
+    <tr>
+        <td>FormView</td><td></td>
+    </tr>
+    <tr>
+        <td>GridView</td><td></td>
+    </tr>
+</table>
+<p></p>
+<table>
+    <tr>
+        <th align="left" colspan="2"><li>Validation Toolbox</li></th>
+    </tr>
+    <tr>
+        <td>CompareValidator</td><td>ValidationSummary</td>
+    </tr>
+    <tr>
+        <td>CustomValidator</td><td></td>
+    </tr>
+    <tr>
+        <td>RangeValidator</td><td></td>
+    </tr>
+    <tr>
+        <td>RegularExpressionValidator</td><td></td>
+    </tr>
+    <tr>
+        <td>RequiredFieldValidator</td><td></td>
+    </tr>
+</table>
