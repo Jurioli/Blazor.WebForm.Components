@@ -81,7 +81,7 @@ Demo: <https://blazorwebformdemo.github.io/>
         <td>CheckBox</td><td>HyperLink</td><td>ListBox</td><td>RadioButton</td><td></td>
     </tr>
     <tr>
-        <td>CheckBoxList</td><td>Image</td><td>ListBox</td><td>RadioButtonList</td><td></td>
+        <td>CheckBoxList</td><td>Image</td><td>Literal</td><td>RadioButtonList</td><td></td>
     </tr>
     <tr>
         <td>ComboBox</td><td>ImageButton</td><td>Localize</td><td>Table</td><td></td>
