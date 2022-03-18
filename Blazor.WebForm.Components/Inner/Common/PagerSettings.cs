@@ -43,6 +43,12 @@ namespace Microsoft.AspNetCore.Components
         public string PreviousPageText { get; set; }
 
         [Parameter]
+        public System.Web.UI.WebControls.RepeatLayout RepeatLayout { get; set; }
+
+        [Parameter]
+        public bool RenderNonBreakingSpacesBetweenControls { get; set; }
+
+        [Parameter]
         public bool Visible { get; set; }
     }
 }
