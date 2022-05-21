@@ -1,0 +1,115 @@
+﻿@using Blazor.WebForm.UI
+@using Blazor.WebForm.UI.ControlComponents
+@using System.Web.UI
+@using System.Web.UI.WebControls
+@inherits WebControlComponent<System.Web.UI.WebControls.RichTextBox>
+@this.RenderWithInner(this.Control)
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string ValidationGroup
+    {
+        get
+        {
+            return this.Control.ValidationGroup;
+        }
+        set
+        {
+            this.Control.ValidationGroup = value;
+        }
+    }
+
+    [Parameter]
+    public bool CausesValidation
+    {
+        get
+        {
+            return this.Control.CausesValidation;
+        }
+        set
+        {
+            this.Control.CausesValidation = value;
+        }
+    }
+
+    [Parameter]
+    public bool AutoPostBack
+    {
+        get
+        {
+            return this.Control.AutoPostBack;
+        }
+        set
+        {
+            this.Control.AutoPostBack = value;
+        }
+    }
+
+    [Parameter]
+    public string InnerHtml
+    {
+        get
+        {
+            return this.Control.InnerHtml;
+        }
+        set
+        {
+            this.Control.InnerHtml = value;
+        }
+    }
+
+    [Parameter]
+    public HtmlTextWriterTag TextBoxTag
+    {
+        get
+        {
+            return this.Control.TextBoxTag;
+        }
+        set
+        {
+            this.Control.TextBoxTag = value;
+        }
+    }
+
+    [Parameter]
+    public EventHandler OnTextChanged
+    {
+        get
+        {
+            return this.GetEventProperty();
+        }
+        set
+        {
+            this.SetEventProperty(value, i => this.Control.TextChanged += i, i => this.Control.TextChanged -= i);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (this.HasPropertyBindEvent<string>(nameof(this.InnerHtml)))
+        {
+            this.Control.AutoPostBack = true;
+            this.Control.TextChanged += this.BindInnerHtmlChanged;
+            if (this.HasEventProperty(nameof(this.OnTextChanged)))
+            {
+                this.SetBindEventProperty(nameof(this.OnTextChanged), this.BindInnerHtmlChanged);
+            }
+        }
+    }
+
+    private void BindInnerHtmlChanged(object sender, EventArgs e)
+    {
+        this.InvokePropertyBindEvent(nameof(this.InnerHtml), this.InnerHtml);
+    }
+
+    protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters)
+    {
+        if (parameters.ContainsKey(nameof(this.ChildContent)) && this.ChildContent != null)
+        {
+            this.InnerHtml = RenderUtility.GetContentString(this.ChildContent);
+        }
+    }
+}

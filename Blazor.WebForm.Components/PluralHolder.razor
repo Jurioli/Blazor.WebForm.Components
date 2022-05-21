@@ -78,10 +78,7 @@
         {
             foreach (Extensions.Web.UI.WebControls.PluralHolder.PluralItem item in this.Control.Items)
             {
-                if (item.DataItem == null || item.DataItem == item.DataItem)
-                {
-                    item.DataItem = this.DataItem;
-                }
+                item.DataItem = this.DataItem;
             }
         }
     }
