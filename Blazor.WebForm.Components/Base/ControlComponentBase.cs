@@ -401,7 +401,14 @@ namespace Blazor.WebForm.UI.ControlComponents
 
         protected virtual void OnSubmit(object sender, EventArgs e)
         {
-            this.SendMessage("RequestLoadPostData", this.TemplateControl);
+            if ((this.ClientScript as IPlatformClientScript).InProcess)
+            {
+                this.SendMessage("RequestLoadPostData", this.TemplateControl);
+            }
+            else
+            {
+                this.SendMessage("RequestLoadPostDataAsync", this.TemplateControl);
+            }
         }
 
         [MessageNotifyMethod]
@@ -414,6 +421,19 @@ namespace Blazor.WebForm.UI.ControlComponents
             if (this.Control is IPostBackDataHandler)
             {
                 this.LoadPostData(false);
+            }
+        }
+
+        [MessageNotifyMethod]
+        protected async Task RequestLoadPostDataAsync(TemplateControl control)
+        {
+            if (_disposed || control != this.TemplateControl)
+            {
+                return;
+            }
+            if (this.Control is IPostBackDataHandler)
+            {
+                await this.LoadPostDataAsync(false);
             }
         }
 

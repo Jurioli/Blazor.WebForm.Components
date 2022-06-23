@@ -1,5 +1,5 @@
 # Blazor.WebForm.Components
- ASP.NET Web Forms System.Web.UI.WebControls Razor Components For Blazor WebAssembly.
+ ASP.NET Web Forms System.Web.UI.WebControls Razor Components For Blazor WebAssembly, Blazor Hybrid, Blazor Server.
 
 Demo: <https://blazorwebformdemo.github.io/>
 
@@ -129,3 +129,41 @@ Demo: <https://blazorwebformdemo.github.io/>
         <td>RequiredFieldValidator</td><td></td>
     </tr>
 </table>
+
+
+
+
+### Blazor Server
+
+Add CircuitHandler service to Program.cs
+
+<pre style="background-color: #eeeeee; border: 1px solid rgb(221, 221, 221); box-sizing: border-box; color: #333333; font-family: &quot;Source Code Pro&quot;, Consolas, Courier, monospace; font-size: 15px; line-height: 22px; margin-bottom: 22px; margin-top: 22px; max-width: 100%; overflow: auto; padding: 4.5px 11px;"><code class="language-cs hljs" style="background-attachment: initial; background-clip: initial; background-image: initial; background-origin: initial; background-position: initial; background-repeat: initial; background-size: initial; border-radius: 0px; border: none; display: block; font-family: &quot;Source Code Pro&quot;, Consolas, Courier, monospace; font-size: 1em; line-height: inherit; margin: 0px; overflow-x: auto; padding: 0px; text-size-adjust: none;">builder.Services.AddScoped&lt;CircuitHandler, ScriptManagerCircuitHandler&gt;();</code></pre>
+
+
+<pre style="background-color: #eeeeee; border: 1px solid rgb(221, 221, 221); box-sizing: border-box; color: #333333; font-family: &quot;Source Code Pro&quot;, Consolas, Courier, monospace; font-size: 15px; line-height: 22px; margin-bottom: 22px; margin-top: 22px; max-width: 100%; overflow: auto; padding: 4.5px 11px;"><code class="language-cs hljs" style="background-attachment: initial; background-clip: initial; background-image: initial; background-origin: initial; background-position: initial; background-repeat: initial; background-size: initial; border-radius: 0px; border: none; display: block; font-family: &quot;Source Code Pro&quot;, Consolas, Courier, monospace; font-size: 1em; line-height: inherit; margin: 0px; overflow-x: auto; padding: 0px; text-size-adjust: none;">using Microsoft.AspNetCore.Components.Server.Circuits;
+using System.Web.Hosting;
+
+namespace Server
+{
+    public class ScriptManagerCircuitHandler : CircuitHandler
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public ScriptManagerCircuitHandler(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
+        {
+            ScriptManagerHost.AddScoped(_serviceProvider);
+            return base.OnCircuitOpenedAsync(circuit, cancellationToken);
+        }
+
+        public override Task OnCircuitClosedAsync(Circuit circuit, CancellationToken cancellationToken)
+        {
+            ScriptManagerHost.RemoveScoped(_serviceProvider);
+            return base.OnCircuitClosedAsync(circuit, cancellationToken);
+        }
+    }
+}</code></pre>
