@@ -209,7 +209,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
             this.OnAfterRenderInternal();
         }
 
-        protected void RenderWithCascading<TValue>(TValue property, RenderFragment childContent, int childLevel = 0)
+        protected void RenderWithCascading<TValue>(TValue property, RenderFragment childContent = null, int childLevel = 0)
         {
             if (_initialized)
             {

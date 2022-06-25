@@ -352,7 +352,7 @@ namespace Blazor.WebForm.UI.ControlComponents
             return this.Render(control);
         }
 
-        protected RenderFragment RenderWithCascading<TValue>(TValue control, RenderFragment childContent, int childLevel = 0) where TValue : Control
+        protected RenderFragment RenderWithCascading<TValue>(TValue control, RenderFragment childContent = null, int childLevel = 0) where TValue : Control
         {
             if (!_renderedWithCascading)
             {

@@ -60,7 +60,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
             }
             else
             {
-                this.Owner.Add(this.Field);
+                this.RenderWithCascading(this.Field);
             }
         }
 

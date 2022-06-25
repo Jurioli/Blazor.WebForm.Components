@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Blazor.WebForm.UI
-
 {
     internal abstract class CascadingChildContentBase
     {

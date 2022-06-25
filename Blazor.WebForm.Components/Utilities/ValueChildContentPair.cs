@@ -15,6 +15,7 @@ namespace Blazor.WebForm.UI
 
     internal class ValueChildContentPair<TValue> : ValueChildContentPair
     {
+        private static readonly RenderFragment EmptyChildContent = builder => { };
         public TValue Value { get; }
         public RenderFragment ChildContent { get; }
         public ValueChildContentPair(TValue value, RenderFragment childContent)
@@ -28,7 +29,7 @@ namespace Blazor.WebForm.UI
             builder.AddAttribute(sequence + 1, "Value", this.Value);
             builder.AddAttribute(sequence + 2, "ChildContent", (RenderFragment)(builder2 =>
             {
-                builder2.AddContent(sequence + 3, this.ChildContent);
+                builder2.AddContent(sequence + 3, this.ChildContent ?? EmptyChildContent);
             }));
             builder.CloseComponent();
         }
