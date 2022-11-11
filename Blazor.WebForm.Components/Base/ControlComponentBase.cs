@@ -446,7 +446,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         {
             if (!_disposed)
             {
-                (this.Control as IHandleUnload).Unload();
+                (this as IHandleUnload).Unload(_events != null ? _events.RemoveAll : null);
                 _disposed = true;
             }
         }

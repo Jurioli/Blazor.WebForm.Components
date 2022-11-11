@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Blazor.WebForm.Components.pfx</AssemblyOriginatorKeyFile>
-    <Version>2.2.0.7</Version>
+    <Version>2.3.0.1</Version>
     <RootNamespace>asp</RootNamespace>
     <Copyright>Jurio li</Copyright>
     <AssemblyName>Blazor.WebForm.Components</AssemblyName>
@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <PackageReference Include="Applied" Version="1.2.1.7" />
-    <PackageReference Include="Blazor.WebForm.UI" Version="2.2.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.10" />
+    <PackageReference Include="Blazor.WebForm.UI" Version="2.3.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

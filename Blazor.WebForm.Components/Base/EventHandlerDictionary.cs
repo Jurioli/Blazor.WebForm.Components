@@ -9,37 +9,138 @@ namespace Blazor.WebForm.UI
 {
     internal class EventHandlerDictionary
     {
-        private class EventProperty
+        private abstract class EventProperty
         {
-            public object Handler { get; set; }
-            public object BindHandler { get; set; }
+            public abstract object Handler { get; set; }
 
-            public void Invoke(object sender, EventArgs e)
+            public abstract object BindHandler { get; set; }
+
+            public abstract void Add();
+
+            public abstract void Remove();
+        }
+
+        private class GeneralEventProperty : EventProperty
+        {
+            private readonly Action<EventHandler> _add;
+            private readonly Action<EventHandler> _remove;
+            private EventHandler _handler;
+            private EventHandler _bindHandler;
+
+            public override object Handler
             {
-                if (this.BindHandler is EventHandler bindHandler)
+                get
                 {
-                    bindHandler.Invoke(sender, e);
+                    return _handler;
                 }
-                if (this.Handler is EventHandler handler)
+                set
                 {
-                    handler.Invoke(sender, e);
+                    _handler = value as EventHandler;
                 }
             }
 
-            public void Invoke<TEventArgs>(object sender, TEventArgs e)
+            public override object BindHandler
             {
-                if (this.BindHandler is EventHandler<TEventArgs> bindHandler)
+                get
                 {
-                    bindHandler.Invoke(sender, e);
+                    return _bindHandler;
                 }
-                if (this.Handler is EventHandler<TEventArgs> handler)
+                set
                 {
-                    handler.Invoke(sender, e);
+                    _bindHandler = value as EventHandler;
                 }
+            }
+
+            public GeneralEventProperty(Action<EventHandler> add, Action<EventHandler> remove) : base()
+            {
+                _add = add;
+                _remove = remove;
+            }
+
+            public override void Add()
+            {
+                _add(this.Invoke);
+            }
+
+            public override void Remove()
+            {
+                _remove(this.Invoke);
+            }
+
+            private void Invoke(object sender, EventArgs e)
+            {
+                _bindHandler?.Invoke(sender, e);
+                _handler?.Invoke(sender, e);
+            }
+        }
+
+        private class EventProperty<TEventArgs> : EventProperty
+        {
+            private readonly Action<EventHandler<TEventArgs>> _add;
+            private readonly Action<EventHandler<TEventArgs>> _remove;
+            private EventHandler<TEventArgs> _handler;
+            private EventHandler<TEventArgs> _bindHandler;
+
+            public override object Handler
+            {
+                get
+                {
+                    return _handler;
+                }
+                set
+                {
+                    _handler = value as EventHandler<TEventArgs>;
+                }
+            }
+
+            public override object BindHandler
+            {
+                get
+                {
+                    return _bindHandler;
+                }
+                set
+                {
+                    _bindHandler = value as EventHandler<TEventArgs>;
+                }
+            }
+
+            public EventProperty(Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
+            {
+                _add = add;
+                _remove = remove;
+            }
+
+            public override void Add()
+            {
+                _add(this.Invoke);
+            }
+
+            public override void Remove()
+            {
+                _remove(this.Invoke);
+            }
+
+            private void Invoke(object sender, TEventArgs e)
+            {
+                _bindHandler?.Invoke(sender, e);
+                _handler?.Invoke(sender, e);
             }
         }
 
         private readonly ConcurrentDictionary<string, EventProperty> _events = new ConcurrentDictionary<string, EventProperty>();
+
+        public void RemoveAll()
+        {
+            if (!_events.IsEmpty)
+            {
+                foreach (EventProperty eventProperty in _events.Values)
+                {
+                    eventProperty.Remove();
+                }
+                _events.Clear();
+            }
+        }
 
         public bool HasEventProperty(string propertyName)
         {
@@ -68,14 +169,14 @@ namespace Blazor.WebForm.UI
         {
             if (handler != null)
             {
-                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, add);
+                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, (add, remove));
                 eventProperty.Handler = handler;
             }
             else
             {
                 if (_events.TryRemove(propertyName, out EventProperty eventProperty))
                 {
-                    remove(eventProperty.Invoke);
+                    eventProperty.Remove();
                     eventProperty.Handler = null;
                 }
             }
@@ -85,14 +186,14 @@ namespace Blazor.WebForm.UI
         {
             if (handler != null)
             {
-                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, add);
+                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, (add, remove));
                 eventProperty.Handler = handler;
             }
             else
             {
                 if (_events.TryRemove(propertyName, out EventProperty eventProperty))
                 {
-                    remove(eventProperty.Invoke);
+                    eventProperty.Remove();
                     eventProperty.Handler = null;
                 }
             }
@@ -114,26 +215,26 @@ namespace Blazor.WebForm.UI
             }
         }
 
-        private EventProperty CreateEventProperty(string propertyName, Action<EventHandler> add)
+        private EventProperty CreateEventProperty(string propertyName, (Action<EventHandler> add, Action<EventHandler> remove) args)
         {
-            EventProperty eventProperty = new EventProperty();
-            add(eventProperty.Invoke);
+            EventProperty eventProperty = new GeneralEventProperty(args.add, args.remove);
+            eventProperty.Add();
             return eventProperty;
         }
 
-        private EventProperty UpdateEventProperty(string propertyName, EventProperty eventProperty, Action<EventHandler> add)
+        private EventProperty UpdateEventProperty(string propertyName, EventProperty eventProperty, (Action<EventHandler> add, Action<EventHandler> remove) args)
         {
             return eventProperty;
         }
 
-        private EventProperty CreateEventProperty<TEventArgs>(string propertyName, Action<EventHandler<TEventArgs>> add)
+        private EventProperty CreateEventProperty<TEventArgs>(string propertyName, (Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove) args)
         {
-            EventProperty eventProperty = new EventProperty();
-            add(eventProperty.Invoke);
+            EventProperty eventProperty = new EventProperty<TEventArgs>(args.add, args.remove);
+            eventProperty.Add();
             return eventProperty;
         }
 
-        private EventProperty UpdateEventProperty<TEventArgs>(string propertyName, EventProperty eventProperty, Action<EventHandler<TEventArgs>> add)
+        private EventProperty UpdateEventProperty<TEventArgs>(string propertyName, EventProperty eventProperty, (Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove) args)
         {
             return eventProperty;
         }
