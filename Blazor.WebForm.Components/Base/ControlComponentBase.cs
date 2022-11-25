@@ -266,11 +266,6 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
         }
 
-        protected bool HasEventProperty(string propertyName)
-        {
-            return _events != null && _events.HasEventProperty(propertyName);
-        }
-
         protected bool HasPropertyBindEvent<TValue>(string propertyName)
         {
             if (_attributes != null

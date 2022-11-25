@@ -152,14 +152,14 @@ namespace Blazor.WebForm.UI
             component.Events.SetEventProperty(handler, add, remove, propertyName);
         }
 
-        public static void SetBindEventProperty(this IParameterViewComponent component, string propertyName, EventHandler bindHandler)
+        public static void SetBindEventProperty(this IParameterViewComponent component, string propertyName, EventHandler bindHandler, Action<EventHandler> add, Action<EventHandler> remove)
         {
-            component.Events.SetBindEventProperty(propertyName, bindHandler);
+            component.Events.SetBindEventProperty(propertyName, bindHandler, add, remove);
         }
 
-        public static void SetBindEventProperty<TEventArgs>(this IParameterViewComponent component, string propertyName, EventHandler<TEventArgs> bindHandler)
+        public static void SetBindEventProperty<TEventArgs>(this IParameterViewComponent component, string propertyName, EventHandler<TEventArgs> bindHandler, Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
         {
-            component.Events.SetBindEventProperty(propertyName, bindHandler);
+            component.Events.SetBindEventProperty(propertyName, bindHandler, add, remove);
         }
 
         public static string ConvertToString<TValue>(this IParameterViewComponent component, TValue value)

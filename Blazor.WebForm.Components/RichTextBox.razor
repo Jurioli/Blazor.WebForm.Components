@@ -92,11 +92,7 @@
         if (this.HasPropertyBindEvent<string>(nameof(this.InnerHtml)))
         {
             this.Control.AutoPostBack = true;
-            this.Control.TextChanged += this.BindInnerHtmlChanged;
-            if (this.HasEventProperty(nameof(this.OnTextChanged)))
-            {
-                this.SetBindEventProperty(nameof(this.OnTextChanged), this.BindInnerHtmlChanged);
-            }
+            this.SetBindEventProperty(nameof(this.OnTextChanged), this.BindInnerHtmlChanged, i => this.Control.TextChanged += i, i => this.Control.TextChanged -= i);
         }
     }
 

@@ -12,6 +12,8 @@ namespace Blazor.WebForm.UI.ControlComponents
     public abstract class ListControlComponent<TControl> : DataBoundControlComponent<TControl>
         where TControl : ListControl, new()
     {
+        internal const string OnDataBindingSelectedIndexChanged = "OnDataBindingSelectedIndexChanged";
+
         private bool _hasBindSelectedValue;
 
         [Parameter]
@@ -203,12 +205,8 @@ namespace Blazor.WebForm.UI.ControlComponents
             {
                 _hasBindSelectedValue = true;
                 this.Control.AutoPostBack = true;
-                this.Control.SelectedIndexChanged += this.BindSelectedIndexChanged;
-                ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += this.BindSelectedIndexChanged;
-                if (this.HasEventProperty(nameof(this.OnSelectedIndexChanged)))
-                {
-                    this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged);
-                }
+                this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged, i => this.Control.SelectedIndexChanged += i, i => this.Control.SelectedIndexChanged -= i);
+                this.SetBindEventProperty(OnDataBindingSelectedIndexChanged, this.BindSelectedIndexChanged, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += i, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged -= i);
             }
         }
 

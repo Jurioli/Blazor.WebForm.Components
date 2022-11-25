@@ -82,11 +82,8 @@ namespace Blazor.WebForm.UI.ControlComponents
             if (this.HasPropertyBindEvent<string[]>(nameof(this.SelectedValues)))
             {
                 this.Control.AutoPostBack = true;
-                this.Control.SelectedIndexChanged += this.BindSelectedIndexChanged;
-                if (this.HasEventProperty(nameof(this.OnSelectedIndexChanged)))
-                {
-                    this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged);
-                }
+                this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged, i => this.Control.SelectedIndexChanged += i, i => this.Control.SelectedIndexChanged -= i);
+                this.SetBindEventProperty(OnDataBindingSelectedIndexChanged, this.BindSelectedIndexChanged, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += i, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged -= i);
             }
         }
 

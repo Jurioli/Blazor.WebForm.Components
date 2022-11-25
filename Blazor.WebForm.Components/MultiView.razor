@@ -56,11 +56,7 @@
         base.OnInitialized();
         if (this.HasPropertyBindEvent<int>(nameof(this.ActiveViewIndex)))
         {
-            this.Control.ActiveViewChanged += this.BindActiveViewChanged;
-            if (this.HasEventProperty(nameof(this.OnActiveViewChanged)))
-            {
-                this.SetBindEventProperty(nameof(this.OnActiveViewChanged), this.BindActiveViewChanged);
-            }
+            this.SetBindEventProperty(nameof(this.OnActiveViewChanged), this.BindActiveViewChanged, i => this.Control.ActiveViewChanged += i, i => this.Control.ActiveViewChanged -= i);
         }
     }
 

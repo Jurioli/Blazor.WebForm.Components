@@ -510,11 +510,7 @@
         base.OnInitialized();
         if (this.HasPropertyBindEvent<int>(nameof(this.ActiveStepIndex)))
         {
-            this.Control.ActiveStepChanged += this.BindActiveStepChanged;
-            if (this.HasEventProperty(nameof(this.OnActiveStepChanged)))
-            {
-                this.SetBindEventProperty(nameof(this.OnActiveStepChanged), this.BindActiveStepChanged);
-            }
+            this.SetBindEventProperty(nameof(this.OnActiveStepChanged), this.BindActiveStepChanged, i => this.Control.ActiveStepChanged += i, i => this.Control.ActiveStepChanged -= i);
         }
     }
 

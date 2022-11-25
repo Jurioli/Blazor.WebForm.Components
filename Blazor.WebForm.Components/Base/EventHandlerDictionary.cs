@@ -15,6 +15,8 @@ namespace Blazor.WebForm.UI
 
             public abstract object BindHandler { get; set; }
 
+            public abstract bool IsEmpty { get; }
+
             public abstract void Add();
 
             public abstract void Remove();
@@ -51,7 +53,15 @@ namespace Blazor.WebForm.UI
                 }
             }
 
-            public GeneralEventProperty(Action<EventHandler> add, Action<EventHandler> remove) : base()
+            public override bool IsEmpty
+            {
+                get
+                {
+                    return _handler == null && _bindHandler == null;
+                }
+            }
+
+            public GeneralEventProperty(Action<EventHandler> add, Action<EventHandler> remove)
             {
                 _add = add;
                 _remove = remove;
@@ -105,6 +115,14 @@ namespace Blazor.WebForm.UI
                 }
             }
 
+            public override bool IsEmpty
+            {
+                get
+                {
+                    return _handler == null && _bindHandler == null;
+                }
+            }
+
             public EventProperty(Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
             {
                 _add = add;
@@ -142,11 +160,6 @@ namespace Blazor.WebForm.UI
             }
         }
 
-        public bool HasEventProperty(string propertyName)
-        {
-            return _events.ContainsKey(propertyName);
-        }
-
         public EventHandler GetEventProperty(string propertyName)
         {
             if (_events.TryGetValue(propertyName, out EventProperty eventProperty))
@@ -167,51 +180,57 @@ namespace Blazor.WebForm.UI
 
         public void SetEventProperty(EventHandler handler, Action<EventHandler> add, Action<EventHandler> remove, string propertyName)
         {
-            if (handler != null)
-            {
-                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, (add, remove));
-                eventProperty.Handler = handler;
-            }
-            else
-            {
-                if (_events.TryRemove(propertyName, out EventProperty eventProperty))
-                {
-                    eventProperty.Remove();
-                    eventProperty.Handler = null;
-                }
-            }
+            this.SetEventProperty(handler, this.CreateEventProperty, (add, remove), propertyName);
         }
 
         public void SetEventProperty<TEventArgs>(EventHandler<TEventArgs> handler, Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove, string propertyName)
         {
+            this.SetEventProperty(handler, this.CreateEventProperty, (add, remove), propertyName);
+        }
+
+        private void SetEventProperty<TArg>(object handler, Func<string, TArg, EventProperty> eventPropertyFactory, TArg factoryArgument, string propertyName)
+        {
+            EventProperty eventProperty;
             if (handler != null)
             {
-                EventProperty eventProperty = _events.AddOrUpdate(propertyName, this.CreateEventProperty, this.UpdateEventProperty, (add, remove));
+                eventProperty = _events.GetOrAdd(propertyName, eventPropertyFactory, factoryArgument);
                 eventProperty.Handler = handler;
             }
-            else
+            else if (_events.TryGetValue(propertyName, out eventProperty))
             {
-                if (_events.TryRemove(propertyName, out EventProperty eventProperty))
+                eventProperty.Handler = null;
+                if (eventProperty.IsEmpty && _events.TryRemove(propertyName, out eventProperty))
                 {
                     eventProperty.Remove();
-                    eventProperty.Handler = null;
                 }
             }
         }
 
-        public void SetBindEventProperty(string propertyName, EventHandler bindHandler)
+        public void SetBindEventProperty(string propertyName, EventHandler bindHandler, Action<EventHandler> add, Action<EventHandler> remove)
         {
-            if (bindHandler != null && _events.TryGetValue(propertyName, out EventProperty eventProperty))
-            {
-                eventProperty.BindHandler = bindHandler;
-            }
+            this.SetBindEventProperty(propertyName, bindHandler, this.CreateEventProperty, (add, remove));
         }
 
-        public void SetBindEventProperty<TEventArgs>(string propertyName, EventHandler<TEventArgs> bindHandler)
+        public void SetBindEventProperty<TEventArgs>(string propertyName, EventHandler<TEventArgs> bindHandler, Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
         {
-            if (bindHandler != null && _events.TryGetValue(propertyName, out EventProperty eventProperty))
+            this.SetBindEventProperty(propertyName, bindHandler, this.CreateEventProperty, (add, remove));
+        }
+
+        private void SetBindEventProperty<TArg>(string propertyName, object bindHandler, Func<string, TArg, EventProperty> eventPropertyFactory, TArg factoryArgument)
+        {
+            EventProperty eventProperty;
+            if (bindHandler != null)
             {
+                eventProperty = _events.GetOrAdd(propertyName, eventPropertyFactory, factoryArgument);
                 eventProperty.BindHandler = bindHandler;
+            }
+            else if (_events.TryGetValue(propertyName, out eventProperty))
+            {
+                eventProperty.BindHandler = null;
+                if (eventProperty.IsEmpty && _events.TryRemove(propertyName, out eventProperty))
+                {
+                    eventProperty.Remove();
+                }
             }
         }
 
@@ -222,20 +241,10 @@ namespace Blazor.WebForm.UI
             return eventProperty;
         }
 
-        private EventProperty UpdateEventProperty(string propertyName, EventProperty eventProperty, (Action<EventHandler> add, Action<EventHandler> remove) args)
-        {
-            return eventProperty;
-        }
-
         private EventProperty CreateEventProperty<TEventArgs>(string propertyName, (Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove) args)
         {
             EventProperty eventProperty = new EventProperty<TEventArgs>(args.add, args.remove);
             eventProperty.Add();
-            return eventProperty;
-        }
-
-        private EventProperty UpdateEventProperty<TEventArgs>(string propertyName, EventProperty eventProperty, (Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove) args)
-        {
             return eventProperty;
         }
     }

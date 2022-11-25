@@ -354,11 +354,7 @@
         base.OnInitialized();
         if (this.HasPropertyBindEvent<DateTime>(nameof(this.SelectedDate)))
         {
-            this.Control.SelectionChanged += this.BindSelectionChanged;
-            if (this.HasEventProperty(nameof(this.OnSelectionChanged)))
-            {
-                this.SetBindEventProperty(nameof(this.OnSelectionChanged), this.BindSelectionChanged);
-            }
+            this.SetBindEventProperty(nameof(this.OnSelectionChanged), this.BindSelectionChanged, i => this.Control.SelectionChanged += i, i => this.Control.SelectionChanged -= i);
         }
     }
 
