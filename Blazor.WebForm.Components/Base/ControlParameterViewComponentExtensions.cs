@@ -164,24 +164,24 @@ namespace Blazor.WebForm.UI
 
         public static string ConvertToString<TValue>(this IParameterViewComponent component, TValue value)
         {
-            return TypeDescriptor.GetConverter(typeof(TValue)).ConvertToString(null, CultureInfo.CurrentCulture, value);
+            return TypeDescriptor.GetConverter(typeof(TValue)).ConvertToInvariantString(value);
         }
 
         public static TValue ConvertFromString<TValue>(this IParameterViewComponent component, string value)
         {
-            return (TValue)TypeDescriptor.GetConverter(typeof(TValue)).ConvertFromString(null, CultureInfo.CurrentCulture, value);
+            return (TValue)TypeDescriptor.GetConverter(typeof(TValue)).ConvertFromInvariantString(value);
         }
 
         public static string ConvertToString<TConverter, TValue>(this IParameterViewComponent component, TValue value)
             where TConverter : TypeConverter, new()
         {
-            return new TConverter().ConvertToString(null, CultureInfo.CurrentCulture, value);
+            return new TConverter().ConvertToInvariantString(value);
         }
 
         public static TValue ConvertFromString<TConverter, TValue>(this IParameterViewComponent component, string value)
             where TConverter : TypeConverter, new()
         {
-            return (TValue)new TConverter().ConvertFromString(null, CultureInfo.CurrentCulture, value);
+            return (TValue)new TConverter().ConvertFromInvariantString(value);
         }
 
         public static ITemplate GetTemplateProperty(this IParameterViewComponent component, RenderFragment value)
