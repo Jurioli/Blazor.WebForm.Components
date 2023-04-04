@@ -176,7 +176,7 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
         }
 
-        [CascadingParameter(Name = nameof(ContainerParent))]
+        [CascadingParameter(Name = nameof(System.Web.UI.Control.ContainerParent))]
         protected Control ContainerParent
         {
             get
@@ -380,12 +380,12 @@ namespace Blazor.WebForm.UI.ControlComponents
             base.OnUpdate(sender, e);
             if (e.PostBackRefresh)
             {
-                this.SendMessage("RequestRefresh", this.TemplateControl);
+                this.SendMessage(nameof(this.RequestRefresh), this.TemplateControl);
             }
         }
 
         [MessageNotifyMethod]
-        protected void RequestRefresh(TemplateControl control)
+        protected internal void RequestRefresh(TemplateControl control)
         {
             if (_disposed || control != this.TemplateControl)
             {
@@ -398,11 +398,11 @@ namespace Blazor.WebForm.UI.ControlComponents
         {
             if ((this.ClientScript as IPlatformClientScript).InProcess)
             {
-                this.SendMessage("RequestLoadPostData", this.TemplateControl);
+                this.SendMessage(nameof(this.RequestLoadPostData), this.TemplateControl);
             }
             else
             {
-                this.SendMessage("RequestLoadPostDataAsync", this.TemplateControl);
+                this.SendMessage(nameof(this.RequestLoadPostDataAsync), this.TemplateControl);
             }
         }
 

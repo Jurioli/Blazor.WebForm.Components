@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI;
+using Blazor.WebForm.UI.ControlComponents;
 using Extensions.ComponentModel;
 
 namespace Microsoft.AspNetCore.Components
@@ -14,7 +15,7 @@ namespace Microsoft.AspNetCore.Components
         public static void RequestRefresh<T>(this TemplateControlComponent<T> component) where T : TemplateControl, new()
         {
             component.LoadPostData();
-            ControlComponentReflection<T>.SendMessageExtensionMethod(component, "RequestRefresh"
+            ControlComponentReflection<T>.SendMessageExtensionMethod(component, nameof(ControlComponentBase<Control>.RequestRefresh)
                 , arguments: new object[] { component.Control });
         }
         private class ControlComponentReflection<T> where T : Control, new()

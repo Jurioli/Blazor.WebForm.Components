@@ -26,8 +26,8 @@ namespace Blazor.WebForm.UI
         internal override void AddChildContent(RenderTreeBuilder builder, int sequence)
         {
             builder.OpenComponent<CascadingValue<TValue>>(sequence);
-            builder.AddAttribute(sequence + 1, "Value", this.Value);
-            builder.AddAttribute(sequence + 2, "ChildContent", (RenderFragment)(builder2 =>
+            builder.AddAttribute(sequence + 1, nameof(CascadingValue<TValue>.Value), this.Value);
+            builder.AddAttribute(sequence + 2, nameof(CascadingValue<TValue>.ChildContent), (RenderFragment)(builder2 =>
             {
                 builder2.AddContent(sequence + 3, this.ChildContent ?? EmptyChildContent);
             }));

@@ -22,7 +22,7 @@ namespace Blazor.WebForm.UI
                 }
                 int sequence = this.ChildContent.Length * 4;
                 builder.OpenComponent<RenderContent>(sequence);
-                builder.AddAttribute(sequence + 1, "ChildContent", CascadingChildContent.StackContent(this.ChildLevel, sequence + 2, builder2 =>
+                builder.AddAttribute(sequence + 1, nameof(RenderContent.ChildContent), CascadingChildContent.StackContent(this.ChildLevel, sequence + 2, builder2 =>
                 {
                     this.AfterContent(builder2, sequence + 2 + (this.ChildLevel * 2));
                 }));
@@ -56,7 +56,7 @@ namespace Blazor.WebForm.UI
                 queue.Push(builder =>
                 {
                     builder.OpenComponent<RenderContent>(sequence++);
-                    builder.AddAttribute(sequence++, "ChildContent", queue.Pop());
+                    builder.AddAttribute(sequence++, nameof(RenderContent.ChildContent), queue.Pop());
                     builder.CloseComponent();
                 });
                 childLevel -= 1;
