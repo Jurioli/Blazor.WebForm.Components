@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 
 namespace Blazor.WebForm.UI.PropertyComponents
 {
@@ -43,7 +44,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
         public string CssClass { get; set; }
 
         [Parameter]
-        public System.Web.UI.WebControls.BorderStyle BorderStyle { get; set; }
+        public BorderStyle BorderStyle { get; set; }
 
         [Parameter]
         public string BorderWidth { get; set; }
@@ -97,28 +98,28 @@ namespace Blazor.WebForm.UI.PropertyComponents
                 case nameof(this.Height):
                 case nameof(this.Width):
                 case nameof(this.BorderWidth):
-                    return this.ConvertFromString<System.Web.UI.WebControls.Unit>(parameter);
+                    return this.ConvertFromString<Unit>(parameter);
 
                 case nameof(this.FontBold):
-                    this.FontInternal["Bold"] = parameter.Value;
+                    this.FontInternal[nameof(FontInfo.Bold)] = parameter.Value;
                     return null;
                 case nameof(this.FontItalic):
-                    this.FontInternal["Italic"] = parameter.Value;
+                    this.FontInternal[nameof(FontInfo.Italic)] = parameter.Value;
                     return null;
                 case nameof(this.FontNames):
-                    this.FontInternal["Names"] = this.ConvertFromString<System.Web.UI.WebControls.FontNamesConverter, string[]>(parameter).Value;
+                    this.FontInternal[nameof(FontInfo.Names)] = this.ConvertFromString<FontNamesConverter, string[]>(parameter).Value;
                     return null;
                 case nameof(this.FontOverline):
-                    this.FontInternal["Overline"] = parameter.Value;
+                    this.FontInternal[nameof(FontInfo.Overline)] = parameter.Value;
                     return null;
                 case nameof(this.FontSize):
-                    this.FontInternal["Size"] = this.ConvertFromString<System.Web.UI.WebControls.FontUnit>(parameter).Value;
+                    this.FontInternal[nameof(FontInfo.Size)] = this.ConvertFromString<FontUnit>(parameter).Value;
                     return null;
                 case nameof(this.FontStrikeout):
-                    this.FontInternal["Strikeout"] = parameter.Value;
+                    this.FontInternal[nameof(FontInfo.Strikeout)] = parameter.Value;
                     return null;
                 case nameof(this.FontUnderline):
-                    this.FontInternal["Underline"] = parameter.Value;
+                    this.FontInternal[nameof(FontInfo.Underline)] = parameter.Value;
                     return null;
             }
             return base.OnConvertParameter(parameter);

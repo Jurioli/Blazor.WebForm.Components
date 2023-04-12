@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Blazor.WebForm.Components.pfx</AssemblyOriginatorKeyFile>
-    <Version>2.3.0.8</Version>
+    <Version>2.3.0.9</Version>
     <RootNamespace>asp</RootNamespace>
     <Copyright>Jurio li</Copyright>
     <AssemblyName>Blazor.WebForm.Components</AssemblyName>
@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Applied" Version="1.2.1.7" />
-    <PackageReference Include="Blazor.WebForm.UI" Version="2.3.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.4" />
+    <PackageReference Include="Applied" Version="1.2.1.8" />
+    <PackageReference Include="Blazor.WebForm.UI" Version="2.3.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.5" />
   </ItemGroup>
 
   <ItemGroup>
