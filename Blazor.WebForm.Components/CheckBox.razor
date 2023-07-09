@@ -140,7 +140,7 @@
 
     private void BindCheckedChanged(object sender, EventArgs e)
     {
-        this.InvokePropertyBindEvent(nameof(this.Checked), this.Checked);
+        this.InvokePropertyBindEvent(nameof(this.OnCheckedChanged), sender, e, nameof(this.Checked), this.Checked);
     }
 
     protected override void SetInnerPropertyWithInner(IReadOnlyDictionary<string, object> parameters)

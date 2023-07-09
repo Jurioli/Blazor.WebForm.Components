@@ -360,6 +360,6 @@
 
     private void BindSelectionChanged(object sender, EventArgs e)
     {
-        this.InvokePropertyBindEvent(nameof(this.SelectedDate), this.SelectedDate);
+        this.InvokePropertyBindEvent(nameof(this.OnSelectionChanged), sender, e, nameof(this.SelectedDate), this.SelectedDate);
     }
 }

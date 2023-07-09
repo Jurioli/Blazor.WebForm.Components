@@ -89,7 +89,12 @@ namespace Blazor.WebForm.UI.ControlComponents
 
         private void BindSelectedIndexChanged(object sender, EventArgs e)
         {
-            this.InvokePropertyBindEvent(nameof(this.SelectedValues), this.SelectedValues);
+            this.InvokePropertyBindEvent(nameof(this.OnSelectedIndexChanged), sender, e, nameof(this.SelectedValues), this.SelectedValues);
+        }
+
+        private void BindDataBindingSelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.InvokePropertyBindEvent(OnDataBindingSelectedIndexChanged, sender, e, nameof(this.SelectedValues), this.SelectedValues);
         }
 
         protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)

@@ -206,13 +206,18 @@ namespace Blazor.WebForm.UI.ControlComponents
                 _hasBindSelectedValue = true;
                 this.Control.AutoPostBack = true;
                 this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged, i => this.Control.SelectedIndexChanged += i, i => this.Control.SelectedIndexChanged -= i);
-                this.SetBindEventProperty(OnDataBindingSelectedIndexChanged, this.BindSelectedIndexChanged, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += i, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged -= i);
+                this.SetBindEventProperty(OnDataBindingSelectedIndexChanged, this.BindDataBindingSelectedIndexChanged, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += i, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged -= i);
             }
         }
 
         private void BindSelectedIndexChanged(object sender, EventArgs e)
         {
-            this.InvokePropertyBindEvent(nameof(this.SelectedValue), this.SelectedValue);
+            this.InvokePropertyBindEvent(nameof(this.OnSelectedIndexChanged), sender, e, nameof(this.SelectedValue), this.SelectedValue);
+        }
+
+        private void BindDataBindingSelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.InvokePropertyBindEvent(OnDataBindingSelectedIndexChanged, sender, e, nameof(this.SelectedValue), this.SelectedValue);
         }
 
         protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace Blazor.WebForm.UI
             public abstract object BindHandler { get; set; }
 
             public abstract bool IsEmpty { get; }
+
+            public abstract bool IsBoth { get; }
 
             public abstract void Add();
 
@@ -61,6 +64,14 @@ namespace Blazor.WebForm.UI
                 }
             }
 
+            public override bool IsBoth
+            {
+                get
+                {
+                    return _handler != null && _bindHandler != null;
+                }
+            }
+
             public GeneralEventProperty(Action<EventHandler> add, Action<EventHandler> remove)
             {
                 _add = add;
@@ -79,8 +90,14 @@ namespace Blazor.WebForm.UI
 
             private void Invoke(object sender, EventArgs e)
             {
-                _bindHandler?.Invoke(sender, e);
-                _handler?.Invoke(sender, e);
+                if (_bindHandler != null)
+                {
+                    _bindHandler.Invoke(sender, e);
+                }
+                else
+                {
+                    _handler?.Invoke(sender, e);
+                }
             }
         }
 
@@ -123,6 +140,14 @@ namespace Blazor.WebForm.UI
                 }
             }
 
+            public override bool IsBoth
+            {
+                get
+                {
+                    return _handler != null && _bindHandler != null;
+                }
+            }
+
             public EventProperty(Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
             {
                 _add = add;
@@ -141,8 +166,14 @@ namespace Blazor.WebForm.UI
 
             private void Invoke(object sender, TEventArgs e)
             {
-                _bindHandler?.Invoke(sender, e);
-                _handler?.Invoke(sender, e);
+                if (_bindHandler != null)
+                {
+                    _bindHandler.Invoke(sender, e);
+                }
+                else
+                {
+                    _handler?.Invoke(sender, e);
+                }
             }
         }
 
@@ -246,6 +277,17 @@ namespace Blazor.WebForm.UI
             EventProperty eventProperty = new EventProperty<TEventArgs>(args.add, args.remove);
             eventProperty.Add();
             return eventProperty;
+        }
+
+        public bool TryGetEventCallbackAdapter<TValue>(string propertyName, EventCallback<TValue> callback, out EventCallbackAdapter<TValue> callbackAdapter)
+        {
+            if (_events.TryGetValue(propertyName, out EventProperty eventProperty) && eventProperty.IsBoth)
+            {
+                callbackAdapter = new EventCallbackAdapter<TValue>(callback, eventProperty.Handler as MulticastDelegate);
+                return true;
+            }
+            callbackAdapter = null;
+            return false;
         }
     }
 }

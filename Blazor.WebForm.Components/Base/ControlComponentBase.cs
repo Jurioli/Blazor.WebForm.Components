@@ -278,17 +278,24 @@ namespace Blazor.WebForm.UI.ControlComponents
             return false;
         }
 
-        protected void InvokePropertyBindEvent<TValue>(string propertyName, TValue value)
+        protected void InvokePropertyBindEvent<TEventArgs, TValue>(string propertyName, object sender, TEventArgs e, string valuePropertyName, TValue value)
         {
             if (_attributes != null
-                && _attributes.TryGetValue($"{propertyName}Changed", out object attribute)
+                && _attributes.TryGetValue($"{valuePropertyName}Changed", out object attribute)
                 && attribute is EventCallback<TValue> callback
                 && callback.HasDelegate)
             {
                 try
                 {
                     _callbacking = true;
-                    callback.InvokeAsync(value);
+                    if (_events != null && _events.TryGetEventCallbackAdapter(propertyName, callback, out EventCallbackAdapter<TValue> callbackAdapter))
+                    {
+                        callbackAdapter.InvokeAsync(value, sender, e);
+                    }
+                    else
+                    {
+                        callback.InvokeAsync(value);
+                    }
                 }
                 finally
                 {

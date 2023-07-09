@@ -62,7 +62,7 @@
 
     private void BindActiveViewChanged(object sender, EventArgs e)
     {
-        this.InvokePropertyBindEvent(nameof(this.ActiveViewIndex), this.ActiveViewIndex);
+        this.InvokePropertyBindEvent(nameof(this.OnActiveViewChanged), sender, e, nameof(this.ActiveViewIndex), this.ActiveViewIndex);
     }
 
     protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)

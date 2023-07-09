@@ -516,7 +516,7 @@
 
     private void BindActiveStepChanged(object sender, EventArgs e)
     {
-        this.InvokePropertyBindEvent(nameof(this.ActiveStepIndex), this.ActiveStepIndex);
+        this.InvokePropertyBindEvent(nameof(this.OnActiveStepChanged), sender, e, nameof(this.ActiveStepIndex), this.ActiveStepIndex);
     }
 
     protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)

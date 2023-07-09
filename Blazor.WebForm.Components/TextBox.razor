@@ -173,6 +173,6 @@
 
     private void BindTextChanged(object sender, EventArgs e)
     {
-        this.InvokePropertyBindEvent(nameof(this.Text), this.Text);
+        this.InvokePropertyBindEvent(nameof(this.OnTextChanged), sender, e, nameof(this.Text), this.Text);
     }
 }
