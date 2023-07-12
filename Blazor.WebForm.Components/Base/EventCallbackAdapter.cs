@@ -40,12 +40,10 @@ namespace Blazor.WebForm.UI
 
         public Task InvokeAsync(TValue value, params object[] eventArgs)
         {
+            EventCallbackWorkItem item = new EventCallbackWorkItem(this.DelegateInvoke);
+            object arg = (value, eventArgs);
             IHandleEvent receiver = this.Receiver;
-            if (receiver == null)
-            {
-                return _callback.InvokeAsync(value);
-            }
-            return receiver.HandleEventAsync(new EventCallbackWorkItem(this.DelegateInvoke), (value, eventArgs));
+            return receiver != null ? receiver.HandleEventAsync(item, arg) : item.InvokeAsync(arg);
         }
 
         private void DelegateInvoke((TValue value, object[] eventArgs) arg)
