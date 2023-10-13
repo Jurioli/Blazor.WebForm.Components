@@ -31,7 +31,7 @@ namespace asp
             item.Apply(() => parameters);
             if (parameters.ContainsKey(nameof(this.ChildContent)) && this.ChildContent != null)
             {
-                item.Text = Blazor.WebForm.UI.RenderUtility.GetContentString(this.ChildContent);
+                Blazor.WebForm.UI.RenderUtility.SetContentString(item, this.ChildContent);
             }
             this.Owner.Items.Add(item);
         }

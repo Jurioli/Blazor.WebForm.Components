@@ -32,7 +32,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         {
             if (parameters.ContainsKey(nameof(this.ChildContent)) && this.ChildContent != null)
             {
-                this.Text = RenderUtility.GetContentString(this.ChildContent);
+                RenderUtility.SetContentString(this.Control, this.ChildContent);
             }
         }
     }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 
 namespace Blazor.WebForm.UI
 {
@@ -74,20 +75,53 @@ namespace Blazor.WebForm.UI
 
         public static string GetContentString(RenderFragment childContent)
         {
-            RenderTreeFrame frame;
-            using (RenderTreeBuilder builder = new RenderTreeBuilder())
+            TryGetContentString(childContent, out string value);
+            return value;
+        }
+
+        public static void SetContentString(ITextContentAccessor textContentAccessor, RenderFragment childContent)
+        {
+            if (TryGetContentString(childContent, out string text))
             {
-                childContent.Invoke(builder);
-                frame = builder.GetFrames().Array.FirstOrDefault();
+                textContentAccessor.Text = text;
             }
-            switch (frame.FrameType)
+            else
             {
-                case RenderTreeFrameType.Text:
-                    return frame.TextContent;
-                case RenderTreeFrameType.Markup:
-                    return frame.MarkupContent;
-                default:
-                    return null;
+                textContentAccessor.TextContent = childContent;
+            }
+        }
+
+        private static bool TryGetContentString(RenderFragment childContent, out string value)
+        {
+            try
+            {
+                using RenderTreeBuilder builder = new RenderTreeBuilder();
+                childContent.Invoke(builder);
+                List<string> texts = new List<string>();
+                foreach (RenderTreeFrame frame in builder.GetFrames().Array)
+                {
+                    switch (frame.FrameType)
+                    {
+                        case RenderTreeFrameType.None:
+                            break;
+                        case RenderTreeFrameType.Text:
+                            texts.Add(frame.TextContent);
+                            break;
+                        case RenderTreeFrameType.Markup:
+                            texts.Add(frame.MarkupContent);
+                            break;
+                        default:
+                            value = null;
+                            return false;
+                    }
+                }
+                value = string.Concat(texts);
+                return true;
+            }
+            catch
+            {
+                value = null;
+                return false;
             }
         }
     }
