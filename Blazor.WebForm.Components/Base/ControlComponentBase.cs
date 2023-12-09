@@ -229,7 +229,7 @@ namespace Blazor.WebForm.UI.ControlComponents
             }
         }
 
-        List<string> IControlParameterViewComponent.ReserveParameters { get; set; }
+        ICollection<string> IControlParameterViewComponent.ReserveParameters { get; set; }
 
         public TemplateControl TemplateControl
         {
@@ -313,6 +313,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         {
             if (_firstSet)
             {
+                bool filter = false;
                 if (parameters.TryGetValue(nameof(this._ref), out Expression<Func<TControl>> func) && func != null)
                 {
                     TControl control = this.CaptureReferenceControl(func);
@@ -321,19 +322,19 @@ namespace Blazor.WebForm.UI.ControlComponents
                         this.Control = control;
                         if (control.IsPostBack)
                         {
-                            this.FilterParameters(ref parameters);
+                            filter = true;
                             _renderedWithCascading = true;
                             _renderedWithInner = true;
                         }
                     }
                 }
                 _firstSet = false;
+                _parameters = filter ? this.FilterParameters(ref parameters) : parameters.ToDictionary();
             }
             else
             {
-                this.FilterParameters(ref parameters);
+                _parameters = this.FilterParameters(ref parameters);
             }
-            _parameters = parameters.ToDictionary();
             return base.SetParametersAsync(parameters);
         }
 

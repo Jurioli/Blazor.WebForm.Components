@@ -197,7 +197,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
             }
         }
 
-        List<string> IControlParameterViewComponent.ReserveParameters { get; set; }
+        ICollection<string> IControlParameterViewComponent.ReserveParameters { get; set; }
 
         public override Task SetParametersAsync(ParameterView parameters)
         {

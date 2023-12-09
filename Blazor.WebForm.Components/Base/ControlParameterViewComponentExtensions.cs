@@ -19,7 +19,7 @@ namespace Blazor.WebForm.UI
     {
         internal Control Control { get; }
         internal IReadOnlyDictionary<string, object> Attributes { get; set; }
-        internal List<string> ReserveParameters { get; set; }
+        internal ICollection<string> ReserveParameters { get; set; }
     }
 
     public interface IParameterViewComponent : IComponent
@@ -29,34 +29,47 @@ namespace Blazor.WebForm.UI
 
     public static class ControlParameterViewComponentExtensions
     {
-        internal static void FilterParameters(this IControlParameterViewComponent component, ref ParameterView parameters)
+        internal static IReadOnlyDictionary<string, object> FilterParameters(this IControlParameterViewComponent component, ref ParameterView parameters)
         {
-            List<string> reserveParameters = component.ReserveParameters;
+            IEnumerable<ParameterValue> parameterValues = parameters.GetParameterValues();
+            ICollection<string> reserveParameters = component.ReserveParameters;
             if (reserveParameters == null)
             {
-                reserveParameters = component.InitReserveParameters(parameters);
+                reserveParameters = component.InitReserveParameters(parameterValues);
                 component.ReserveParameters = reserveParameters;
             }
-            List<KeyValuePair<string, object>> list = new List<KeyValuePair<string, object>>();
-            foreach (KeyValuePair<string, object> pair in parameters.ToDictionary())
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            foreach (ParameterValue value in parameterValues)
             {
-                if (reserveParameters.Contains(pair.Key))
+                if (reserveParameters.Contains(value.Name))
                 {
-                    list.Add(pair);
+                    result.Add(value.Name, value.Value);
                 }
             }
-            parameters = ParameterView.FromDictionary(new Dictionary<string, object>(list));
+            parameters = ParameterView.FromDictionary(result);
+            return result;
         }
 
-        private static List<string> InitReserveParameters(this IControlParameterViewComponent component, ParameterView parameters)
+        private static IEnumerable<ParameterValue> GetParameterValues(this ParameterView parameters)
+        {
+            ParameterView.Enumerator enumerator = parameters.GetEnumerator();
+            List<ParameterValue> result = new List<ParameterValue>();
+            while (enumerator.MoveNext())
+            {
+                result.Add(enumerator.Current);
+            }
+            return result;
+        }
+
+        private static ICollection<string> InitReserveParameters(this IControlParameterViewComponent component, IEnumerable<ParameterValue> parameters)
         {
             List<string> reserveParameters = new List<string>();
             IReadOnlyDictionary<string, object> attributes = component.Attributes;
-            foreach (KeyValuePair<string, object> pair in parameters.ToDictionary())
+            foreach (ParameterValue value in parameters)
             {
-                if (pair.Key == "ChildContent" || HasPropertyBindEvent(attributes, pair.Key) || IsRenderFragment(pair.Value))
+                if (value.Name == "ChildContent" || HasPropertyBindEvent(attributes, value.Name) || IsRenderFragment(value.Value))
                 {
-                    reserveParameters.Add(pair.Key);
+                    reserveParameters.Add(value.Name);
                 }
             }
             return reserveParameters;
