@@ -7,12 +7,14 @@
 @code {
     private GridViewDeletedEventHandler _rowDeleted;
     private GridViewUpdatedEventHandler _rowUpdated;
+    private GridViewInsertedEventHandler _rowInserted;
     private GridViewCancelEditEventHandler _rowCancelingEdit;
     private GridViewDeleteEventHandler _rowDeleting;
     private GridViewEditEventHandler _rowEditing;
     private GridViewPageEventHandler _pageIndexChanging;
     private GridViewSelectEventHandler _selectedIndexChanging;
     private GridViewUpdateEventHandler _rowUpdating;
+    private GridViewInsertEventHandler _rowInserting;
     private GridViewCommandEventHandler _rowCommand;
     private GridViewSortEventHandler _sorting;
     private GridViewRowEventHandler _rowDataBound;
@@ -439,6 +441,32 @@
         }
     }
 
+    [Parameter]
+    public InsertRowPosition InsertRowPosition
+    {
+        get
+        {
+            return this.Control.InsertRowPosition;
+        }
+        set
+        {
+            this.Control.InsertRowPosition = value;
+        }
+    }
+
+    [Parameter]
+    public bool InsertRowAsFooterWhenEdit
+    {
+        get
+        {
+            return this.Control.InsertRowAsFooterWhenEdit;
+        }
+        set
+        {
+            this.Control.InsertRowAsFooterWhenEdit = value;
+        }
+    }
+
     protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
     {
         if (parameters.TryGetValue(nameof(this.EditIndex), out object value1) && value1 is int editIndex)
@@ -503,6 +531,27 @@
                 this.Control.RowUpdated -= InvokeRowUpdated;
             }
             _rowUpdated = value;
+        }
+    }
+
+    [Parameter]
+    public GridViewInsertedEventHandler OnRowInserted
+    {
+        get
+        {
+            return _rowInserted;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.RowInserted += InvokeRowInserted;
+            }
+            else
+            {
+                this.Control.RowInserted -= InvokeRowInserted;
+            }
+            _rowInserted = value;
         }
     }
 
@@ -659,6 +708,27 @@
     }
 
     [Parameter]
+    public GridViewInsertEventHandler OnRowInserting
+    {
+        get
+        {
+            return _rowInserting;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Control.RowInserting += InvokeRowInserting;
+            }
+            else
+            {
+                this.Control.RowInserting -= InvokeRowInserting;
+            }
+            _rowInserting = value;
+        }
+    }
+
+    [Parameter]
     public GridViewCommandEventHandler OnRowCommand
     {
         get
@@ -765,6 +835,11 @@
         _rowUpdated.Invoke(sender, e);
     }
 
+    private void InvokeRowInserted(object sender, GridViewInsertedEventArgs e)
+    {
+        _rowInserted.Invoke(sender, e);
+    }
+
     private void InvokeRowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
         _rowCancelingEdit.Invoke(sender, e);
@@ -793,6 +868,11 @@
     private void InvokeRowUpdating(object sender, GridViewUpdateEventArgs e)
     {
         _rowUpdating.Invoke(sender, e);
+    }
+
+    private void InvokeRowInserting(object sender, GridViewInsertEventArgs e)
+    {
+        _rowInserting.Invoke(sender, e);
     }
 
     private void InvokeRowCommand(object sender, GridViewCommandEventArgs e)
