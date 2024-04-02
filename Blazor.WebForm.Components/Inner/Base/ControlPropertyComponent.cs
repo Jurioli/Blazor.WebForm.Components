@@ -217,7 +217,15 @@ namespace Blazor.WebForm.UI.PropertyComponents
             {
                 this.FilterParameters(ref parameters);
             }
-            return base.SetParametersAsync(parameters);
+            try
+            {
+                _inSetParams = true;
+                return base.SetParametersAsync(parameters);
+            }
+            finally
+            {
+                _inSetParams = false;
+            }
         }
 
         //public void DataBind()

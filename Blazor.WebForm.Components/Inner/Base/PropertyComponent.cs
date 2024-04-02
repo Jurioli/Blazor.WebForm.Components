@@ -16,6 +16,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
         private RenderFragment _renderFragment;
 
         private EventHandlerDictionary _events;
+        internal bool _inSetParams;
 
         [CascadingParameter]
         protected internal T Owner { get; set; }
@@ -36,7 +37,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
             {
                 if (_events == null)
                 {
-                    _events = new EventHandlerDictionary();
+                    _events = new EventHandlerDictionary(() => _inSetParams);
                 }
                 return _events;
             }

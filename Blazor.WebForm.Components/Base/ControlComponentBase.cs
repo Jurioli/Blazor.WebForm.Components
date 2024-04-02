@@ -19,6 +19,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         private IReadOnlyDictionary<string, object> _attributes;
         private EventHandlerDictionary _events;
         private bool _firstSet = true;
+        private bool _inSetParams;
 
         private bool _callbacking = false;
 
@@ -223,7 +224,7 @@ namespace Blazor.WebForm.UI.ControlComponents
             {
                 if (_events == null)
                 {
-                    _events = new EventHandlerDictionary();
+                    _events = new EventHandlerDictionary(() => _inSetParams);
                 }
                 return _events;
             }
@@ -335,7 +336,15 @@ namespace Blazor.WebForm.UI.ControlComponents
             {
                 _parameters = this.FilterParameters(ref parameters);
             }
-            return base.SetParametersAsync(parameters);
+            try
+            {
+                _inSetParams = true;
+                return base.SetParametersAsync(parameters);
+            }
+            finally
+            {
+                _inSetParams = false;
+            }
         }
 
         protected override void OnAfterRender(bool firstRender)

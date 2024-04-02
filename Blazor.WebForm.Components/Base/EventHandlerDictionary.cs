@@ -12,6 +12,8 @@ namespace Blazor.WebForm.UI
     {
         private abstract class EventProperty
         {
+            private readonly Func<bool> _inSetParams;
+
             public abstract object Handler { get; set; }
 
             public abstract object BindHandler { get; set; }
@@ -19,6 +21,19 @@ namespace Blazor.WebForm.UI
             public abstract bool IsEmpty { get; }
 
             public abstract bool IsBoth { get; }
+
+            protected bool InSetParams
+            {
+                get
+                {
+                    return _inSetParams != null && _inSetParams.Invoke();
+                }
+            }
+
+            public EventProperty(Func<bool> inSetParams)
+            {
+                _inSetParams = inSetParams;
+            }
 
             public abstract void Add();
 
@@ -31,6 +46,7 @@ namespace Blazor.WebForm.UI
             private readonly Action<EventHandler> _remove;
             private EventHandler _handler;
             private EventHandler _bindHandler;
+            private bool _invoking;
 
             public override object Handler
             {
@@ -72,7 +88,8 @@ namespace Blazor.WebForm.UI
                 }
             }
 
-            public GeneralEventProperty(Action<EventHandler> add, Action<EventHandler> remove)
+            public GeneralEventProperty(Func<bool> inSetParams, Action<EventHandler> add, Action<EventHandler> remove)
+                : base(inSetParams)
             {
                 _add = add;
                 _remove = remove;
@@ -90,13 +107,24 @@ namespace Blazor.WebForm.UI
 
             private void Invoke(object sender, EventArgs e)
             {
-                if (_bindHandler != null)
+                if (!_invoking)
                 {
-                    _bindHandler.Invoke(sender, e);
-                }
-                else
-                {
-                    _handler?.Invoke(sender, e);
+                    try
+                    {
+                        _invoking = true;
+                        if (!this.InSetParams && _bindHandler != null)
+                        {
+                            _bindHandler.Invoke(sender, e);
+                        }
+                        else
+                        {
+                            _handler?.Invoke(sender, e);
+                        }
+                    }
+                    finally
+                    {
+                        _invoking = false;
+                    }
                 }
             }
         }
@@ -107,6 +135,7 @@ namespace Blazor.WebForm.UI
             private readonly Action<EventHandler<TEventArgs>> _remove;
             private EventHandler<TEventArgs> _handler;
             private EventHandler<TEventArgs> _bindHandler;
+            private bool _invoking;
 
             public override object Handler
             {
@@ -148,7 +177,8 @@ namespace Blazor.WebForm.UI
                 }
             }
 
-            public EventProperty(Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
+            public EventProperty(Func<bool> inSetParams, Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove)
+                : base(inSetParams)
             {
                 _add = add;
                 _remove = remove;
@@ -166,18 +196,35 @@ namespace Blazor.WebForm.UI
 
             private void Invoke(object sender, TEventArgs e)
             {
-                if (_bindHandler != null)
+                if (!_invoking)
                 {
-                    _bindHandler.Invoke(sender, e);
-                }
-                else
-                {
-                    _handler?.Invoke(sender, e);
+                    try
+                    {
+                        _invoking = true;
+                        if (!this.InSetParams && _bindHandler != null)
+                        {
+                            _bindHandler.Invoke(sender, e);
+                        }
+                        else
+                        {
+                            _handler?.Invoke(sender, e);
+                        }
+                    }
+                    finally
+                    {
+                        _invoking = false;
+                    }
                 }
             }
         }
 
         private readonly ConcurrentDictionary<string, EventProperty> _events = new ConcurrentDictionary<string, EventProperty>();
+        private readonly Func<bool> _inSetParams;
+
+        public EventHandlerDictionary(Func<bool> inSetParams)
+        {
+            _inSetParams = inSetParams;
+        }
 
         public void RemoveAll()
         {
@@ -267,14 +314,14 @@ namespace Blazor.WebForm.UI
 
         private EventProperty CreateEventProperty(string propertyName, (Action<EventHandler> add, Action<EventHandler> remove) args)
         {
-            EventProperty eventProperty = new GeneralEventProperty(args.add, args.remove);
+            EventProperty eventProperty = new GeneralEventProperty(_inSetParams, args.add, args.remove);
             eventProperty.Add();
             return eventProperty;
         }
 
         private EventProperty CreateEventProperty<TEventArgs>(string propertyName, (Action<EventHandler<TEventArgs>> add, Action<EventHandler<TEventArgs>> remove) args)
         {
-            EventProperty eventProperty = new EventProperty<TEventArgs>(args.add, args.remove);
+            EventProperty eventProperty = new EventProperty<TEventArgs>(_inSetParams, args.add, args.remove);
             eventProperty.Add();
             return eventProperty;
         }
