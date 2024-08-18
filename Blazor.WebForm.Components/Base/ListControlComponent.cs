@@ -30,7 +30,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         }
 
         [Parameter]
-        public virtual string SelectedValue
+        public string SelectedValue
         {
             get
             {

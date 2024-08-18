@@ -9,78 +9,36 @@ using System.Web.UI.WebControls;
 namespace Blazor.WebForm.UI.ControlComponents
 {
     public abstract class MultipleSelectionListControlComponent<TControl> : ListControlComponent<TControl>
-        where TControl : ListControl, new()
+        where TControl : MultipleSelectionListControl, new()
     {
-        [Parameter]
-        public override string SelectedValue
-        {
-            get
-            {
-                return base.SelectedValue;
-            }
-            set
-            {
-                if (this.IsMultipleSelection && !string.IsNullOrEmpty(value))
-                {
-                    foreach (ListItem item in this.Control.Items)
-                    {
-                        if (item.Selected)
-                        {
-                            if (item.Value == value)
-                            {
-                                return;
-                            }
-                            break;
-                        }
-                    }
-                }
-                base.SelectedValue = value;
-            }
-        }
+        private bool _hasBindSelectedValues;
 
         [Parameter]
         public string[] SelectedValues
         {
             get
             {
-                List<string> list = new List<string>();
-                foreach (ListItem item in this.Control.Items)
-                {
-                    if (item.Selected)
-                    {
-                        list.Add(item.Value);
-                    }
-                }
-                return list.ToArray();
+                return this.Control.SelectedValues;
             }
             set
             {
-                bool autoPostBack = this.AutoPostBack;
-                if (autoPostBack)
+                if (_hasBindSelectedValues)
                 {
-                    this.AutoPostBack = false;
+                    ((IBindingMultipleSelectionListControl)this.Control).SelectedValues = value;
                 }
-                try
+                else
                 {
-                    foreach (ListItem item in this.Control.Items)
-                    {
-                        item.Selected = (Array.IndexOf(value, item.Value) != -1);
-                    }
-                }
-                finally
-                {
-                    this.AutoPostBack = autoPostBack;
+                    this.Control.SelectedValues = value;
                 }
             }
         }
-
-        protected abstract bool IsMultipleSelection { get; }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
             if (this.HasPropertyBindEvent<string[]>(nameof(this.SelectedValues)))
             {
+                _hasBindSelectedValues = true;
                 this.Control.AutoPostBack = true;
                 this.SetBindEventProperty(nameof(this.OnSelectedIndexChanged), this.BindSelectedIndexChanged, i => this.Control.SelectedIndexChanged += i, i => this.Control.SelectedIndexChanged -= i);
                 this.SetBindEventProperty(OnDataBindingSelectedIndexChanged, this.BindSelectedIndexChanged, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged += i, i => ((IBindingListControl)this.Control).DataBindingSelectedIndexChanged -= i);
