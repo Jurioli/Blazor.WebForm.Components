@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 using TypeConverter = System.ComponentModel.TypeConverter;
 
 namespace Blazor.WebForm.UI.PropertyComponents
@@ -48,27 +49,27 @@ namespace Blazor.WebForm.UI.PropertyComponents
             _renderHandle = renderHandle;
         }
 
-        Task IComponent.SetParametersAsync(ParameterView parameters)
-        {
-            return this.SetParametersAsync(parameters);
-        }
-
         public virtual Task SetParametersAsync(ParameterView parameters)
         {
-            parameters.SetParameterProperties(this);
+            ParameterViewContext context = new ParameterViewContext(parameters);
+            context.SetPrefixParameters(this);
+            return this.OnSetParametersAsync(context);
+        }
+
+        protected virtual Task OnSetParametersAsync(ParameterViewContext context)
+        {
+            context.SetParameterProperties(this);
             if (this.Owner != null && !_initialized)
             {
                 this.AdapterInternal = this.ResolveAdapter();
-                IReadOnlyDictionary<string, object> dictionary;
                 if (!this.NeedConvertParameter)
                 {
-                    dictionary = parameters.ToDictionary();
+                    _parameters = context.Parameters;
                 }
                 else
                 {
-                    dictionary = new Dictionary<string, object>(this.GetConvertParameters(parameters));
+                    _parameters = new Dictionary<string, object>(this.GetConvertParameters(context));
                 }
-                _parameters = dictionary;
                 this.SetInnerPropertyInternal(_parameters);
                 if (_renderFragment != null)
                 {
@@ -84,9 +85,9 @@ namespace Blazor.WebForm.UI.PropertyComponents
             return Task.CompletedTask;
         }
 
-        private IEnumerable<KeyValuePair<string, object>> GetConvertParameters(ParameterView parameters)
+        private IEnumerable<KeyValuePair<string, object>> GetConvertParameters(ParameterViewContext context)
         {
-            foreach (KeyValuePair<string, object> parameter in parameters.ToDictionary())
+            foreach (KeyValuePair<string, object> parameter in context.Parameters)
             {
                 KeyValuePair<string, object>? pair = this.OnConvertParameter(parameter);
                 if (pair != null)

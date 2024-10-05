@@ -310,12 +310,12 @@ namespace Blazor.WebForm.UI.ControlComponents
             return !_callbacking && base.ShouldRender();
         }
 
-        public override Task SetParametersAsync(ParameterView parameters)
+        protected override Task OnSetParametersAsync(ParameterViewContext context)
         {
             if (_firstSet)
             {
                 bool filter = false;
-                if (parameters.TryGetValue(nameof(this._ref), out Expression<Func<TControl>> func) && func != null)
+                if (context.TryGetValue(nameof(this._ref), out Expression<Func<TControl>> func) && func != null)
                 {
                     TControl control = this.CaptureReferenceControl(func);
                     if (control != null)
@@ -330,16 +330,16 @@ namespace Blazor.WebForm.UI.ControlComponents
                     }
                 }
                 _firstSet = false;
-                _parameters = filter ? this.FilterParameters(ref parameters) : parameters.ToDictionary();
+                _parameters = filter ? this.FilterParameters(context) : context.Parameters;
             }
             else
             {
-                _parameters = this.FilterParameters(ref parameters);
+                _parameters = this.FilterParameters(context);
             }
             try
             {
                 _inSetParams = true;
-                return base.SetParametersAsync(parameters);
+                return base.OnSetParametersAsync(context);
             }
             finally
             {

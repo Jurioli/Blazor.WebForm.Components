@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 
 namespace Blazor.WebForm.UI.PropertyComponents
 {
@@ -199,11 +200,11 @@ namespace Blazor.WebForm.UI.PropertyComponents
 
         ICollection<string> IControlParameterViewComponent.ReserveParameters { get; set; }
 
-        public override Task SetParametersAsync(ParameterView parameters)
+        protected override Task OnSetParametersAsync(ParameterViewContext context)
         {
             if (_firstSet)
             {
-                if (parameters.TryGetValue(nameof(this._ref), out Expression<Func<TControl>> func) && func != null)
+                if (context.TryGetValue(nameof(this._ref), out Expression<Func<TControl>> func) && func != null)
                 {
                     TControl control = this.CaptureReferenceControl(func);
                     if (control != null)
@@ -215,12 +216,12 @@ namespace Blazor.WebForm.UI.PropertyComponents
             }
             else
             {
-                this.FilterParameters(ref parameters);
+                this.FilterParameters(context);
             }
             try
             {
                 _inSetParams = true;
-                return base.SetParametersAsync(parameters);
+                return base.OnSetParametersAsync(context);
             }
             finally
             {

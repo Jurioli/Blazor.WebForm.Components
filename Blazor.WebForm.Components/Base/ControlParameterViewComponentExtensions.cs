@@ -29,47 +29,39 @@ namespace Blazor.WebForm.UI
 
     public static class ControlParameterViewComponentExtensions
     {
-        internal static IReadOnlyDictionary<string, object> FilterParameters(this IControlParameterViewComponent component, ref ParameterView parameters)
+        internal static IReadOnlyDictionary<string, object> FilterParameters(this IControlParameterViewComponent component, ParameterViewContext context)
         {
-            IEnumerable<ParameterValue> parameterValues = parameters.GetParameterValues();
+            IReadOnlyDictionary<string, object> parameters = context.Parameters;
+            if (parameters.Count == 0)
+            {
+                return parameters;
+            }
             ICollection<string> reserveParameters = component.ReserveParameters;
             if (reserveParameters == null)
             {
-                reserveParameters = component.InitReserveParameters(parameterValues);
+                reserveParameters = component.InitReserveParameters(parameters);
                 component.ReserveParameters = reserveParameters;
             }
             Dictionary<string, object> result = new Dictionary<string, object>();
-            foreach (ParameterValue value in parameterValues)
+            foreach (KeyValuePair<string, object> value in parameters)
             {
-                if (reserveParameters.Contains(value.Name))
+                if (reserveParameters.Contains(value.Key))
                 {
-                    result.Add(value.Name, value.Value);
+                    result.Add(value.Key, value.Value);
                 }
             }
-            parameters = ParameterView.FromDictionary(result);
+            context.UpdateParameters(result);
             return result;
         }
 
-        private static IEnumerable<ParameterValue> GetParameterValues(this ParameterView parameters)
-        {
-            ParameterView.Enumerator enumerator = parameters.GetEnumerator();
-            List<ParameterValue> result = new List<ParameterValue>();
-            while (enumerator.MoveNext())
-            {
-                result.Add(enumerator.Current);
-            }
-            return result;
-        }
-
-        private static ICollection<string> InitReserveParameters(this IControlParameterViewComponent component, IEnumerable<ParameterValue> parameters)
+        private static ICollection<string> InitReserveParameters(this IControlParameterViewComponent component, IReadOnlyDictionary<string, object> parameters)
         {
             List<string> reserveParameters = new List<string>();
-            IReadOnlyDictionary<string, object> attributes = component.Attributes;
-            foreach (ParameterValue value in parameters)
+            foreach (KeyValuePair<string, object> value in parameters)
             {
-                if (value.Name == "ChildContent" || HasPropertyBindEvent(attributes, value.Name) || IsRenderFragment(value.Value))
+                if (value.Key == "ChildContent" || parameters.HasPropertyBindEvent(value.Key) || IsRenderFragment(value.Value))
                 {
-                    reserveParameters.Add(value.Name);
+                    reserveParameters.Add(value.Key);
                 }
             }
             return reserveParameters;
@@ -102,11 +94,15 @@ namespace Blazor.WebForm.UI
             return func.Compile().Invoke();
         }
 
-        private static bool HasPropertyBindEvent(IReadOnlyDictionary<string, object> attributes, string propertyName)
+        private static bool HasPropertyBindEvent(this IReadOnlyDictionary<string, object> parameters, string propertyName)
         {
-            if (attributes != null && attributes.ContainsKey($"{propertyName}Changed"))
+            if (parameters.TryGetValue($"{propertyName}Changed", out object value) && value != null)
             {
-                return true;
+                Type type = value.GetType();
+                if (type.IsValueType && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(EventCallback<>))
+                {
+                    return true;
+                }
             }
             return false;
         }
