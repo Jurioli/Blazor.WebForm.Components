@@ -289,7 +289,7 @@ namespace Blazor.WebForm.UI.ControlComponents
                 try
                 {
                     _callbacking = true;
-                    if (_events != null && _events.TryGetEventCallbackAdapter(propertyName, callback, out EventCallbackAdapter<TValue> callbackAdapter))
+                    if (_events != null && _events.TryGetEventCallbackAdapter(propertyName, callback, out EventCallbackAdapter<TEventArgs, TValue> callbackAdapter))
                     {
                         callbackAdapter.InvokeAsync(value, sender, e);
                     }

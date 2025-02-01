@@ -14,9 +14,9 @@ namespace Blazor.WebForm.UI
         {
             private readonly Func<bool> _inSetParams;
 
-            public abstract object Handler { get; set; }
+            public abstract MulticastDelegate Handler { get; set; }
 
-            public abstract object BindHandler { get; set; }
+            public abstract MulticastDelegate BindHandler { get; set; }
 
             public abstract bool IsEmpty { get; }
 
@@ -48,7 +48,7 @@ namespace Blazor.WebForm.UI
             private EventHandler _bindHandler;
             private bool _invoking;
 
-            public override object Handler
+            public override MulticastDelegate Handler
             {
                 get
                 {
@@ -60,7 +60,7 @@ namespace Blazor.WebForm.UI
                 }
             }
 
-            public override object BindHandler
+            public override MulticastDelegate BindHandler
             {
                 get
                 {
@@ -137,7 +137,7 @@ namespace Blazor.WebForm.UI
             private EventHandler<TEventArgs> _bindHandler;
             private bool _invoking;
 
-            public override object Handler
+            public override MulticastDelegate Handler
             {
                 get
                 {
@@ -149,7 +149,7 @@ namespace Blazor.WebForm.UI
                 }
             }
 
-            public override object BindHandler
+            public override MulticastDelegate BindHandler
             {
                 get
                 {
@@ -266,7 +266,7 @@ namespace Blazor.WebForm.UI
             this.SetEventProperty(handler, this.CreateEventProperty, (add, remove), propertyName);
         }
 
-        private void SetEventProperty<TArg>(object handler, Func<string, TArg, EventProperty> eventPropertyFactory, TArg factoryArgument, string propertyName)
+        private void SetEventProperty<TArg>(MulticastDelegate handler, Func<string, TArg, EventProperty> eventPropertyFactory, TArg factoryArgument, string propertyName)
         {
             EventProperty eventProperty;
             if (handler != null)
@@ -294,7 +294,7 @@ namespace Blazor.WebForm.UI
             this.SetBindEventProperty(propertyName, bindHandler, this.CreateEventProperty, (add, remove));
         }
 
-        private void SetBindEventProperty<TArg>(string propertyName, object bindHandler, Func<string, TArg, EventProperty> eventPropertyFactory, TArg factoryArgument)
+        private void SetBindEventProperty<TArg>(string propertyName, MulticastDelegate bindHandler, Func<string, TArg, EventProperty> eventPropertyFactory, TArg factoryArgument)
         {
             EventProperty eventProperty;
             if (bindHandler != null)
@@ -326,11 +326,11 @@ namespace Blazor.WebForm.UI
             return eventProperty;
         }
 
-        public bool TryGetEventCallbackAdapter<TValue>(string propertyName, EventCallback<TValue> callback, out EventCallbackAdapter<TValue> callbackAdapter)
+        public bool TryGetEventCallbackAdapter<TEventArgs, TValue>(string propertyName, EventCallback<TValue> callback, out EventCallbackAdapter<TEventArgs, TValue> callbackAdapter)
         {
             if (_events.TryGetValue(propertyName, out EventProperty eventProperty) && eventProperty.IsBoth)
             {
-                callbackAdapter = new EventCallbackAdapter<TValue>(callback, eventProperty.Handler as MulticastDelegate);
+                callbackAdapter = new EventCallbackAdapter<TEventArgs, TValue>(callback, eventProperty.Handler);
                 return true;
             }
             callbackAdapter = null;
