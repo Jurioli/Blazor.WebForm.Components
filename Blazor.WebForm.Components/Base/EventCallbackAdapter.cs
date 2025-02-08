@@ -74,7 +74,7 @@ namespace Blazor.WebForm.UI
                 {
                     try
                     {
-                        return eventHandler?.DynamicInvoke(sender, e) as Task ?? Task.CompletedTask;
+                        return eventHandler.DynamicInvoke(sender, e) as Task ?? Task.CompletedTask;
                     }
                     catch (TargetInvocationException ex)
                     {
