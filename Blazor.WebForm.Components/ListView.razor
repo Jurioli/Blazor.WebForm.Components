@@ -201,6 +201,19 @@
         }
     }
 
+    [Parameter]
+    public bool AllowVirtualizing
+    {
+        get
+        {
+            return this.Control.AllowVirtualizing;
+        }
+        set
+        {
+            this.Control.AllowVirtualizing = value;
+        }
+    }
+
     protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
     {
         if (parameters.TryGetValue(nameof(this.EditIndex), out object value1) && value1 is int editIndex)

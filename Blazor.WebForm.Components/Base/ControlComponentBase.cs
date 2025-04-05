@@ -26,6 +26,7 @@ namespace Blazor.WebForm.UI.ControlComponents
         private IReadOnlyDictionary<string, object> _parameters;
         private bool _renderedWithCascading;
         private bool _renderedWithInner;
+        private bool _captureReference;
         private TemplateControl _templateControl;
 
         //new public virtual TControl Control
@@ -321,7 +322,8 @@ namespace Blazor.WebForm.UI.ControlComponents
                     if (control != null)
                     {
                         this.Control = control;
-                        if (control.IsPostBack)
+                        _captureReference = true;
+                        if (control.IsPostBack || (control as IHandleSetInner).Rendered)
                         {
                             filter = true;
                             _renderedWithCascading = true;
@@ -351,6 +353,15 @@ namespace Blazor.WebForm.UI.ControlComponents
         {
             _parameters = null;
             base.OnAfterRender(firstRender);
+        }
+
+        protected override RenderFragment Render<TValue>(TValue control)
+        {
+            if (_captureReference)
+            {
+                (control as IHandleSetInner).Rendered = true;
+            }
+            return base.Render(control);
         }
 
         protected virtual void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)

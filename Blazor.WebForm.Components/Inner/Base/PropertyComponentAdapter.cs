@@ -29,7 +29,7 @@ namespace Blazor.WebForm.UI.PropertyComponents
 
         protected internal virtual void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
         {
-            this.Component.SetInnerProperty(parameters);
+            this.Component.SetInnerPropertyWithCascading(parameters);
         }
 
         protected internal virtual void OnAfterRender()
