@@ -89,6 +89,32 @@ namespace Blazor.WebForm.UI.ControlComponents
         }
 
         [Parameter]
+        public string DataGroupFormatString
+        {
+            get
+            {
+                return this.Control.DataGroupFormatString;
+            }
+            set
+            {
+                this.Control.DataGroupFormatString = value;
+            }
+        }
+
+        [Parameter]
+        public string DataGroupField
+        {
+            get
+            {
+                return this.Control.DataGroupField;
+            }
+            set
+            {
+                this.Control.DataGroupField = value;
+            }
+        }
+
+        [Parameter]
         public bool CausesValidation
         {
             get

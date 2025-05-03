@@ -2,7 +2,7 @@
 @using Blazor.WebForm.UI.ControlComponents
 @using System.Web.UI
 @using System.Web.UI.WebControls
-@inherits WebControlComponent<System.Web.UI.WebControls.VirtualizeTable>
+@inherits TableControlComponent<System.Web.UI.WebControls.VirtualizeTable>
 @this.RenderWithCascading(this.Control, this.ChildContent, this.ChildLevel)
 @code {
     [Parameter]
@@ -10,97 +10,6 @@
 
     [Parameter]
     public int ChildLevel { get; set; } = 2;
-
-    [Parameter]
-    public HorizontalAlign HorizontalAlign
-    {
-        get
-        {
-            return this.Control.HorizontalAlign;
-        }
-        set
-        {
-            this.Control.HorizontalAlign = value;
-        }
-    }
-
-    [Parameter]
-    public GridLines GridLines
-    {
-        get
-        {
-            return this.Control.GridLines;
-        }
-        set
-        {
-            this.Control.GridLines = value;
-        }
-    }
-
-    [Parameter]
-    public int CellSpacing
-    {
-        get
-        {
-            return this.Control.CellSpacing;
-        }
-        set
-        {
-            this.Control.CellSpacing = value;
-        }
-    }
-
-    [Parameter]
-    public int CellPadding
-    {
-        get
-        {
-            return this.Control.CellPadding;
-        }
-        set
-        {
-            this.Control.CellPadding = value;
-        }
-    }
-
-    [Parameter]
-    public TableCaptionAlign CaptionAlign
-    {
-        get
-        {
-            return this.Control.CaptionAlign;
-        }
-        set
-        {
-            this.Control.CaptionAlign = value;
-        }
-    }
-
-    [Parameter]
-    public string Caption
-    {
-        get
-        {
-            return this.Control.Caption;
-        }
-        set
-        {
-            this.Control.Caption = value;
-        }
-    }
-
-    [Parameter]
-    public string BackImageUrl
-    {
-        get
-        {
-            return this.Control.BackImageUrl;
-        }
-        set
-        {
-            this.Control.BackImageUrl = value;
-        }
-    }
 
     [Parameter]
     public float? ItemSize

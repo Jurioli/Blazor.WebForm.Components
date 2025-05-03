@@ -23,6 +23,9 @@ namespace asp
         [Parameter]
         public string Value { get; set; }
 
+        [Parameter]
+        public string Group { get; set; }
+
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, object> Attributes { get; set; }
 

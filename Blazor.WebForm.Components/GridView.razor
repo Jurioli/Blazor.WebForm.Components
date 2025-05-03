@@ -480,6 +480,32 @@
         }
     }
 
+    [Parameter]
+    public bool DisabledFooterVirtualize
+    {
+        get
+        {
+            return this.Control.DisabledFooterVirtualize;
+        }
+        set
+        {
+            this.Control.DisabledFooterVirtualize = value;
+        }
+    }
+
+    [Parameter]
+    public bool DisabledHeaderVirtualize
+    {
+        get
+        {
+            return this.Control.DisabledHeaderVirtualize;
+        }
+        set
+        {
+            this.Control.DisabledHeaderVirtualize = value;
+        }
+    }
+
     protected override void SetInnerPropertyWithCascading(IReadOnlyDictionary<string, object> parameters)
     {
         if (parameters.TryGetValue(nameof(this.EditIndex), out object value1) && value1 is int editIndex)
