@@ -49,6 +49,9 @@ namespace Blazor.WebForm.UI.PropertyComponents
         public bool Visible { get; set; }
 
         [Parameter]
+        public int AutoGenerateFieldIndex { get; set; }
+
+        [Parameter]
         public string AccessibleHeaderText { get; set; }
 
         protected internal override void SetInnerProperty(IReadOnlyDictionary<string, object> parameters)
